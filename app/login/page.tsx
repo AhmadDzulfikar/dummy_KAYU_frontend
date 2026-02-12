@@ -2,22 +2,38 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage(null);
 
     // Simulate API call
     setTimeout(() => {
-      setLoading(false);
-      setMessage('Dummy login authenticated');
+      // Dummy Account Checks
+      if (username === 'AmanSatu' && password === 'BelumEligible') {
+        router.push('/student/aman-belum-eligible');
+      }
+      else if (username === 'AmanDua' && password === 'Eligible') {
+        router.push('/student/aman-eligible');
+      }
+      else if (username === 'WarningSatu' && password === 'BelumEligible') {
+        router.push('/student/warning-belum-eligible');
+      }
+      else {
+        // Invalid credentials
+        setMessage({ text: 'Invalid username or password', type: 'error' });
+        setLoading(false);
+      }
     }, 1500);
   };
 
@@ -53,8 +69,6 @@ export default function LoginPage() {
       {/* Main Content Area */}
       <main className="flex-1 relative flex flex-col items-center justify-center p-4 w-full">
 
-        {/* Banner removed from here, moved to header */}
-
         {/* Login Card */}
         <div className="w-full max-w-[400px] md:max-w-md bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)] border border-gray-100 z-10 relative">
 
@@ -83,9 +97,10 @@ export default function LoginPage() {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="block w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400
+                    className={`block w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400
                              focus:border-[#5AA0FF] focus:ring-4 focus:ring-[#5AA0FF]/10 focus:bg-white
-                             transition-all duration-200 ease-in-out outline-none sm:text-sm"
+                             transition-all duration-200 ease-in-out outline-none sm:text-sm
+                             ${message?.type === 'error' ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-200' : ''}`}
                     placeholder="Enter your username"
                   />
                 </div>
@@ -110,9 +125,10 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400
+                    className={`block w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400
                              focus:border-[#5AA0FF] focus:ring-4 focus:ring-[#5AA0FF]/10 focus:bg-white
-                             transition-all duration-200 ease-in-out outline-none sm:text-sm"
+                             transition-all duration-200 ease-in-out outline-none sm:text-sm
+                             ${message?.type === 'error' ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-200' : ''}`}
                     placeholder="••••••••"
                   />
                 </div>
@@ -145,10 +161,25 @@ export default function LoginPage() {
 
             {/* Dummy Feedback Message */}
             {message && (
-              <div className="mt-6 p-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm text-center font-medium border border-emerald-200 animate-pulse">
-                {message}
+              <div className={`mt-6 p-3 rounded-lg text-sm text-center font-medium border animate-pulse
+                 ${message.type === 'error'
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}
+              >
+                {message.text}
               </div>
             )}
+
+            {/* Helper Text for Demo Purpose (Optional, but helpful for user testing) */}
+            <div className="mt-8 pt-4 border-t border-dashed border-gray-200 text-center">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-2">Demo Accounts</p>
+              <div className="text-xs text-gray-500 space-y-1 font-mono">
+                <div>AmanSatu / BelumEligible</div>
+                <div>AmanDua / Eligible</div>
+                <div>WarningSatu / BelumEligible</div>
+              </div>
+            </div>
+
           </div>
 
           <div className="bg-gray-50/80 px-8 py-5 border-t border-gray-100 flex flex-col items-center justify-center space-y-2">
