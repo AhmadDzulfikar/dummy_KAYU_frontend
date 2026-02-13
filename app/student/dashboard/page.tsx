@@ -6,10 +6,7 @@ import {
     XCircle,
     AlertCircle,
     Search,
-    Filter,
-    BookOpen,
-    ArrowRightLeft,
-    Map
+    Check
 } from '../components/Icons';
 
 export default function StudentDashboard() {
@@ -17,10 +14,10 @@ export default function StudentDashboard() {
 
     // Dummy Data
     const summaryData = [
-        { label: 'Total Credits', value: '102', sub: 'Cumulative SKS' },
+        { label: 'Regular Credits', value: '138', sub: 'Course SKS only' },
         { label: 'Completed', value: '24/40', sub: 'Required Courses' },
         { label: 'GPA (IPK)', value: '3.28', sub: 'Scale 4.0' },
-        { label: 'Latest GPA (IPS)', value: '3.10', sub: '18 SKS' }, // Added to summary for thoroughness
+        { label: 'Transfer Credits', value: '6', sub: 'Counted separately', highlight: true },
     ];
 
     const maxCreditsRules = [
@@ -48,30 +45,48 @@ export default function StudentDashboard() {
         { code: 'CSGE602012', name: 'Web Development', sks: 3, grade: 'A', semester: 'Term 3' },
     ];
 
-    // Status: SAFE
-    // Yudisium: Not Eligible
-
     return (
         <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
 
             {/* 1. Quick Academic Summary */}
             <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {summaryData.map((item, idx) => (
-                    <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover:shadow-md transition-shadow group">
+                    <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border ${item.highlight ? 'border-blue-100 bg-blue-50/30' : 'border-gray-100'} flex flex-col items-center text-center hover:shadow-md transition-shadow group relative overflow-hidden`}>
+                        {item.highlight && <div className="absolute top-0 right-0 w-8 h-8 bg-blue-100 rounded-bl-2xl"></div>}
                         <span className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">{item.label}</span>
-                        <span className="text-3xl font-extrabold text-gray-900 tracking-tight my-1 group-hover:text-[#5AA0FF] transition-colors">{item.value}</span>
+                        <span className={`text-3xl font-extrabold tracking-tight my-1 group-hover:text-[#5AA0FF] transition-colors ${item.highlight ? 'text-blue-900' : 'text-gray-900'}`}>{item.value}</span>
                         <span className="text-xs text-gray-500 font-medium">{item.sub}</span>
                     </div>
                 ))}
             </section>
 
+            {/* Call to Action Banner */}
+            <div className="bg-gradient-to-r from-blue-600 to-[#5AA0FF] rounded-2xl shadow-lg shadow-blue-200 text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shrink-0 border border-white/30">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold">Check your Graduation Eligibility</h3>
+                        <p className="text-blue-100 text-sm opacity-90">Verify if you meet all requirements for Yudisium.</p>
+                    </div>
+                </div>
+                <Link
+                    href="/student/graduation-calculator"
+                    className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                >
+                    Go to Graduation Calculator
+                </Link>
+            </div>
+
+
             {/* 2. Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                {/* LEFT COLUMN (Academic Status & Graduation) - lg:col-span-5 */}
+                {/* LEFT COLUMN (Academic Status) - lg:col-span-5 */}
                 <div className="lg:col-span-5 space-y-8">
 
-                    {/* A) Academic Evaluation Status (SAFE) - REFINED */}
+                    {/* A) Academic Evaluation Status (SAFE) */}
                     <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
                         {/* Status Header */}
                         <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
@@ -97,8 +112,8 @@ export default function StudentDashboard() {
                                     <span className="text-xl font-bold text-gray-900">3.10</span>
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Passed Credits</span>
-                                    <span className="text-xl font-bold text-gray-900">102</span>
+                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Total Regular</span>
+                                    <span className="text-xl font-bold text-gray-900">138</span>
                                 </div>
                                 <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
                                     <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Max Next SKS</span>
@@ -126,75 +141,9 @@ export default function StudentDashboard() {
                             <p className="mt-4 text-xs text-gray-500 leading-relaxed bg-yellow-50 p-3 rounded-lg border border-yellow-100 flex gap-2">
                                 <AlertCircle className="w-4 h-4 text-yellow-600 shrink-0" />
                                 <span>
-                                    <span className="font-semibold text-yellow-800">Rule Context:</span> Even semesters use a 24-credit milestone check. Falling below thresholds may trigger evaluation.
+                                    <span className="font-semibold text-yellow-800">Note:</span> Even semesters have a 24-credit milestone check (24, 48, 72...).
                                 </span>
                             </p>
-                        </div>
-                    </section>
-
-                    {/* B) Graduation Calculator - REFINED */}
-                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-                        <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                            <div>
-                                <h2 className="text-lg font-bold text-gray-900">Graduation Calculator</h2>
-                                <p className="text-xs text-gray-500 mt-0.5">Eligibility Check</p>
-                            </div>
-                            <div className="px-3 py-1 bg-yellow-100 text-yellow-700 font-bold rounded-full text-xs border border-yellow-200 flex items-center shadow-sm">
-                                <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
-                                NOT ELIGIBLE
-                            </div>
-                        </div>
-
-                        <div className="p-6">
-                            <div className="space-y-5">
-                                {/* Progress 1: Total Credits */}
-                                <div>
-                                    <div className="flex justify-between text-xs font-bold text-gray-600 mb-1.5">
-                                        <span>Total Credits (144 min)</span>
-                                        <span className="text-gray-900">102 / 144</span>
-                                    </div>
-                                    <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-yellow-400 w-[70%] rounded-full shadow-[0_0_10px_rgba(250,204,21,0.3)]"></div>
-                                    </div>
-                                </div>
-
-                                {/* Progress 2: Required Courses */}
-                                <div>
-                                    <div className="flex justify-between text-xs font-bold text-gray-600 mb-1.5">
-                                        <span>Required Courses</span>
-                                        <span className="text-gray-900">24 / 40</span>
-                                    </div>
-                                    <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-yellow-400 w-[60%] rounded-full shadow-[0_0_10px_rgba(250,204,21,0.3)]"></div>
-                                    </div>
-                                </div>
-
-                                {/* GPA Status */}
-                                <div className="flex items-center justify-between text-sm py-3 border-t border-gray-50 mt-2">
-                                    <span className="text-gray-500 font-medium">Min GPA Requirement</span>
-                                    <span className="font-bold text-green-600 flex items-center text-xs bg-green-50 px-2 py-1 rounded-md border border-green-100">
-                                        <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
-                                        PASSED (3.28)
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="mt-6 space-y-3">
-                                <div className="relative group">
-                                    <button
-                                        disabled
-                                        className="w-full py-3 rounded-xl bg-gray-100 text-gray-400 font-bold text-sm cursor-not-allowed flex items-center justify-center transition-colors"
-                                    >
-                                        Submit Yudisium
-                                    </button>
-                                    <div className="mt-2 text-center text-xs text-red-500 font-medium">
-                                        Complete requirements to enable submission.
-                                    </div>
-                                </div>
-                                <button className="w-full py-3 rounded-xl border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 hover:text-gray-900 transition-colors flex items-center justify-center">
-                                    View Requirements
-                                </button>
-                            </div>
                         </div>
                     </section>
                 </div>
@@ -227,7 +176,7 @@ export default function StudentDashboard() {
                                 </div>
                             </div>
 
-                            {/* Search Bar - Independent of tab content for layout stability */}
+                            {/* Search Bar */}
                             <div className="relative">
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <input
