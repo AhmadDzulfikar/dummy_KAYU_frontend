@@ -20,14 +20,75 @@ export default function LoginPage() {
     // Simulate API call
     setTimeout(() => {
       // Dummy Account Checks
-      if (username === 'AmanSatu' && password === 'BelumEligible') {
-        router.push('/student/aman-belum-eligible');
-      }
-      else if (username === 'AmanDua' && password === 'Eligible') {
-        router.push('/student/dashboard');
-      }
-      else if (username === 'WarningSatu' && password === 'BelumEligible') {
-        router.push('/student/warning-belum-eligible');
+
+      // 1. Define Dummy Database
+      const accounts: Record<string, { pass: string, roles: string[] }> = {
+        // Students
+        'AmanSatu': { pass: 'BelumEligible', roles: ['Student-NotEligible'] },
+        'AmanDua': { pass: 'Eligible', roles: ['Student-Eligible'] },
+        'WarningSatu': { pass: 'BelumEligible', roles: ['Student-Warning'] },
+
+        // Staff / Non-Student Roles
+        'DosenPA': { pass: 'DosenPA', roles: ['Academic Advisor'] },
+        'TimYudisium': { pass: 'TimYudisium', roles: ['Yudisium Team'] },
+        'ManajerAkademik': { pass: 'ManajerAkademik', roles: ['Academic Manager'] },
+        'Sekretariat': { pass: 'Sekretariat', roles: ['Secretariat'] },
+        'Kaprodi': { pass: 'Kaprodi', roles: ['Head of Program'] },
+
+        // Multi-Role
+        'MultiRole': { pass: 'MultiRole', roles: ['Academic Advisor', 'Yudisium Team'] }
+      };
+
+      // Role -> Path Mapping
+      const rolePaths: Record<string, string> = {
+        'Academic Advisor': '/pa/dashboard',
+        'Yudisium Team': '/yudisium/dashboard',
+        'Academic Manager': '/academic-manager/dashboard',
+        'Secretariat': '/secretariat/dashboard',
+        'Head of Program': '/kaprodi/dashboard'
+      };
+
+      const user = accounts[username];
+
+      if (user && user.pass === password) {
+        // Success
+        // 1. Clear previous session data
+        localStorage.removeItem('userRoles');
+        localStorage.removeItem('lastUsedRole');
+
+        // 2. Handle Students Specials
+        if (user.roles[0].startsWith('Student')) {
+          if (user.roles[0] === 'Student-NotEligible') router.push('/student/aman-belum-eligible');
+          else if (user.roles[0] === 'Student-Eligible') router.push('/student/dashboard');
+          else if (user.roles[0] === 'Student-Warning') router.push('/student/warning-belum-eligible');
+          return;
+        }
+
+        // 3. Handle Staff Roles
+        // Store roles for the session
+        localStorage.setItem('userRoles', JSON.stringify(user.roles));
+
+        // Check default role (if implemented, for now we follow the simple rule: 1 role = auto, >1 = select)
+        const savedDefault = localStorage.getItem('defaultRole');
+        if (savedDefault && user.roles.includes(savedDefault)) {
+          // If user wants to auto-login to default
+          router.push(rolePaths[savedDefault]);
+          return;
+        }
+
+        if (user.roles.length === 1) {
+          // Redirect directly
+          const path = rolePaths[user.roles[0]];
+          if (path) router.push(path);
+          else {
+            // Fallback
+            setMessage({ text: 'Configuration error: No path for role', type: 'error' });
+            setLoading(false);
+          }
+        } else {
+          // Redirect to role selector
+          router.push('/select-role');
+        }
       }
       else {
         // Invalid credentials
@@ -174,9 +235,10 @@ export default function LoginPage() {
             <div className="mt-8 pt-4 border-t border-dashed border-gray-200 text-center">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-2">Demo Accounts</p>
               <div className="text-xs text-gray-500 space-y-1 font-mono">
-                <div>AmanSatu / BelumEligible</div>
-                <div>AmanDua / Eligible</div>
-                <div>WarningSatu / BelumEligible</div>
+                <div>Students: AmanSatu, AmanDua, WarningSatu (pw matched)</div>
+                <div className="pt-2 font-bold text-gray-400">Staff (pw = username):</div>
+                <div>DosenPA, TimYudisium, ManajerAkademik</div>
+                <div>Sekretariat, Kaprodi, MultiRole</div>
               </div>
             </div>
 
