@@ -88,16 +88,12 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 <nav className="flex-1 overflow-y-auto py-4 flex flex-col justify-between">
                     <ul className="space-y-1 px-3">
                         {[
-                            { name: 'Dashboard', icon: LayoutDashboard, href: '/student/aman-belum-eligible' },
+                            { name: 'Dashboard', icon: LayoutDashboard, href: '/student/dashboard' },
                             { name: 'Graduation Calculator', icon: Calculator, href: '/student/graduation-calculator' },
                             { name: 'Credit Transfer List', icon: ArrowRightLeft, href: '/student/credit-transfer' },
                         ].map((item) => {
                             // Active logic: 
-                            // If plain Dashboard, active on /dashboard or /aman-belum-eligible
-                            // Otherwise strict match
-                            const isActive = item.name === 'Dashboard'
-                                ? (pathname === '/student/dashboard' || pathname.includes('aman-belum-eligible'))
-                                : pathname === item.href;
+                            const isActive = pathname === item.href;
 
                             return (
                                 <li key={item.name}>

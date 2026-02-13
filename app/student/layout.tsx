@@ -9,6 +9,7 @@ export default function StudentLayout({
     children: React.ReactNode;
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [notificationsOpen, setNotificationsOpen] = useState(false);
 
     return (
         <div className="flex min-h-screen bg-gray-50 font-sans text-gray-900">
@@ -107,10 +108,37 @@ export default function StudentLayout({
                         </div>
 
                         <div className="flex items-center gap-3 md:gap-5">
-                            <button className="relative p-2 text-gray-500 hover:bg-gray-100/80 rounded-full transition-colors">
-                                <Bell className="w-5 h-5" />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                            </button>
+                            <div className="relative">
+                                <button
+                                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                                    className={`relative p-2 rounded-full transition-colors ${notificationsOpen ? 'bg-blue-50 text-[#5AA0FF]' : 'text-gray-500 hover:bg-gray-100/80'}`}
+                                >
+                                    <Bell className="w-5 h-5" />
+                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                </button>
+
+                                {notificationsOpen && (
+                                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                                        <div className="px-4 py-2 border-b border-gray-50 flex justify-between items-center">
+                                            <h3 className="font-bold text-sm text-gray-800">Notifications</h3>
+                                            <span className="text-[10px] text-[#5AA0FF] font-medium cursor-pointer hover:underline">Mark read</span>
+                                        </div>
+                                        <div className="max-h-[300px] overflow-y-auto">
+                                            {[1, 2, 3].map((i) => (
+                                                <div key={i} className="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0 relative">
+                                                    {i === 1 && <div className="absolute left-2 top-4 w-1.5 h-1.5 bg-[#5AA0FF] rounded-full"></div>}
+                                                    <p className="text-xs font-semibold text-gray-800 mb-1">Academic Schedule Update</p>
+                                                    <p className="text-[10px] text-gray-500 leading-snug">IRS filling period for Even Semester 2025/2026 has been extended.</p>
+                                                    <span className="text-[10px] text-gray-400 mt-1 block">2 hours ago</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="px-4 py-2 border-t border-gray-50 text-center">
+                                            <button className="text-xs text-gray-500 hover:text-[#5AA0FF] font-medium transition-colors">View all</button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="flex items-center gap-3 pl-3 border-l border-gray-100">
                                 <div className="hidden sm:flex flex-col items-end">
