@@ -31,25 +31,33 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     };
 
     // Determine context (Eligible vs Not Eligible) based on current path
+    // Determine context (Eligible vs Not Eligible) based on current path
+    const isWarningContext = pathname.includes('warning');
     const isNotEligibleContext = pathname.includes('aman-belum-eligible') || pathname.includes('not-eligible');
 
     const menuItems = [
         {
             name: 'Dashboard',
             icon: LayoutDashboard,
-            href: isNotEligibleContext ? '/student/aman-belum-eligible' : '/student/dashboard'
+            href: isWarningContext
+                ? '/student/warning-belum-eligible'
+                : (isNotEligibleContext ? '/student/aman-belum-eligible' : '/student/dashboard')
         },
 
         {
             name: 'Graduation Calculator',
             icon: Calculator,
-            href: isNotEligibleContext ? '/student/graduation-calculator/not-eligible' : '/student/graduation-calculator'
+            href: isWarningContext
+                ? '/student/graduation-calculator/warning'
+                : (isNotEligibleContext ? '/student/graduation-calculator/not-eligible' : '/student/graduation-calculator')
         },
 
         {
             name: 'Credit Transfer List',
             icon: ArrowRightLeft,
-            href: isNotEligibleContext ? '/student/credit-transfer/not-eligible' : '/student/credit-transfer'
+            href: isWarningContext
+                ? '/student/credit-transfer/warning'
+                : (isNotEligibleContext ? '/student/credit-transfer/not-eligible' : '/student/credit-transfer')
         },
     ];
 

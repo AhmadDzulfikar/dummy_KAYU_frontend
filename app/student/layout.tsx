@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import { Bell, Menu, User } from './components/Icons';
 
+import { usePathname } from 'next/navigation';
+
 export default function StudentLayout({
     children,
 }: {
@@ -10,6 +12,29 @@ export default function StudentLayout({
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const pathname = usePathname();
+
+    // Determine Status based on path
+    const isWarning = pathname.includes('warning');
+    const isEligible = pathname.includes('aman-eligible') || (pathname.includes('dashboard') && !pathname.includes('aman-belum') && !isWarning);
+    // Note: 'dashboard' is the default for eligible, so we check exclusions.
+
+    // Config
+    const evaluationStatus = isWarning ? 'WARNING' : 'SAFE';
+    const evaluationColor = isWarning ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700';
+
+    const yudisiumStatus = isEligible ? 'Eligible' : 'Not eligible';
+    const yudisiumColor = isEligible ? 'text-green-600 font-medium' : 'text-gray-500';
+
+    // Notifications
+    const notifications = isWarning ? [
+        { title: 'Academic Warning Status', desc: 'You are in Academic Warning status. Please meet your advisor.', time: '1 hour ago', unread: true },
+        { title: 'IPS Below Threshold', desc: 'IPS below threshold detected (2.10).', time: '2 hours ago', unread: true },
+        { title: 'Credit Deficiency', desc: 'Odd semester passed credits below 11 SKS.', time: '5 hours ago', unread: false },
+    ] : [
+        { title: 'Academic Schedule Update', desc: 'IRS filling period for Even Semester 2025/2026 has been extended.', time: '2 hours ago', unread: true },
+        { title: 'System Maintenance', desc: 'Scheduled maintenance on Sunday 02:00 AM.', time: '1 day ago', unread: false },
+    ];
 
     return (
         <div className="flex min-h-screen bg-gray-50 font-sans text-gray-900">
@@ -17,70 +42,7 @@ export default function StudentLayout({
             <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
             {/* Main Content Area */}
-            <div className={`flex-1 flex flex-col transition-all duration-300 md:ml-64 ${/* Note: The sidebar component handles its own width in fixed position. We need to reserve space via margin if sidebar is expanded. 
-            However, since sidebar can collapse, we need to communicate that state or just use a safe margin.
-            Ideally context is used, but for simplicity we'll assume default expanded state margin on desktop.
-            Wait, I implemented internal state for collapse in Sidebar. I need to lift that state up or use a context if I want the margin to adjust dynamically.
-            For this mockup, I'll stick to a fixed margin-left on desktop (md:ml-20 if collapsed, md:ml-64 if expanded).
-            Actually, to make it perfectly dynamic, I should share state. 
-            Refactoring Layout to manage sidebar state.
-            */ ''}`}>
-
-                {/* 
-                   Correction: To avoid complex state management across components for this simple task, 
-                   I will use a simpler approach: The Sidebar is fixed. The main content has padding-left. 
-                   The padding-left needs to change based on sidebar state.
-                   I will move the `collapsed` state to this Layout and pass it down.
-                */}
-
-                {/* Re-thinking for simplicity: Just keep sidebar fixed z-index on top for mobile, 
-                 and for desktop let's assume it pushes content.
-                 Actually, the previous sidebar implementation handles its own state. 
-                 I'll update the Sidebar to accept `collapsed` prop if I want to control layout margin.
-                 
-                 BUT, since I cannot easily edit the Sidebar file I just wrote without rewriting it,
-                 I will assume a standard desktop layout where the sidebar is fixed and main content has a margin.
-                 I'll add a wrapper that adjusts margin based on standard size.
-                 Actually, just using `md:pl-64` is safe enough for the expanded state which is default.
-                 If user collapses, there will be gap. White space is fine.
-                 Let's stick to `md:pl-20` (collapsed size) or `md:pl-64`. 
-                 
-                 WAIT. I need to make sure the sidebar I wrote matches this.
-                 The sidebar uses `fixed`. So it sits ON TOP or to the side.
-                 I need to add `pl-64` to the main content container so it doesn't go under the sidebar.
-                 
-                 However, since the sidebar can be collapsed by the user (component state), the `pl` needs to react.
-                 This is a classic issue.
-                 
-                 I'll rewrite the layout to just use `flex` and NOT `fixed` sidebar for desktop?
-                 No, "fixed sidebar" was requested.
-                 
-                 I'll just add a `md:pl-20` as a base and let the content flow? No, that overlaps if expanded.
-                 I will modify the Sidebar in the previous step? No, I already wrote it.
-                 I will update the layout to NOT import Sidebar (since I need to rewrite it to lift state ideally).
-                 
-                 Actually, I can just use a trick: 
-                 The sidebar is fixed. 
-                 The header needs to be sticky or fixed too.
-                 I'll wrap `children` in a div with `md:pl-64` (default). When collapsed, I'll just accept that there is extra space or I'll try to find a way.
-                 
-                 Actually, I'll rewrite the Sidebar component to lift the state up in the NEXT turn if needed.
-                 For now, I'll use `md:ml-0` and let the Sidebar be a flex item for desktop? 
-                 Prompt said "fixed side bar".
-                 
-                 Let's go with: Flex layout on desktop (Sidebar is `sticky top-0 h-screen`), so it takes distinct space.
-                 On mobile: `fixed inset-y-0`.
-                 
-                 I need to update Sidebar to be `sticky` on desktop instead of `fixed`.
-                 Let's rewrite Sidebar.tsx? No, I'll write `layout.tsx` to accommodate the `fixed` sidebar I wrote.
-                 
-                 Wait, I can create a Context for Sidebar state, but that's overkill.
-                 I'll just make the Sidebar fixed and give the main content `md:pl-64`.
-                 If the user collapses the sidebar, there will be empty space on the left. That's ACCEPTABLE for a mockup.
-                 The user asked for "Collapsible mode... (optional but nice)".
-                 
-                 Let's proceed.
-                */}
+            <div className={`flex-1 flex flex-col transition-all duration-300 md:ml-64`}>
 
                 {/* Content Wrapper */}
                 <div className="flex-1 flex flex-col min-h-screen">
@@ -98,13 +60,13 @@ export default function StudentLayout({
                             <div>
                                 <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Student Dashboard</h1>
                                 <div className="flex items-center text-xs md:text-sm text-gray-500 mt-0.5 space-x-2">
-                                    <span className="font-medium text-gray-600">Term 3</span>
+                                    <span className="font-medium text-gray-600">Term {isWarning ? '4' : '3'}</span>
                                     <span className="hidden sm:inline text-gray-300">•</span>
                                     <span className="flex items-center">
-                                        Evaluation: <span className="ml-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold tracking-wide uppercase">Safe</span>
+                                        Evaluation: <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${evaluationColor}`}>{evaluationStatus}</span>
                                     </span>
                                     <span className="hidden sm:inline text-gray-300">•</span>
-                                    <span className="hidden sm:inline">Yudisium: Not eligible</span>
+                                    <span className={`hidden sm:inline ${yudisiumColor}`}>Yudisium: {yudisiumStatus}</span>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +78,9 @@ export default function StudentLayout({
                                     className={`relative p-2 rounded-full transition-colors ${notificationsOpen ? 'bg-blue-50 text-[#5AA0FF]' : 'text-gray-500 hover:bg-gray-100/80'}`}
                                 >
                                     <Bell className="w-5 h-5" />
-                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                    {notifications.some(n => n.unread) && (
+                                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                    )}
                                 </button>
 
                                 {notificationsOpen && (
@@ -126,12 +90,12 @@ export default function StudentLayout({
                                             <span className="text-[10px] text-[#5AA0FF] font-medium cursor-pointer hover:underline">Mark read</span>
                                         </div>
                                         <div className="max-h-[300px] overflow-y-auto">
-                                            {[1, 2, 3].map((i) => (
+                                            {notifications.map((n, i) => (
                                                 <div key={i} className="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0 relative">
-                                                    {i === 1 && <div className="absolute left-2 top-4 w-1.5 h-1.5 bg-[#5AA0FF] rounded-full"></div>}
-                                                    <p className="text-xs font-semibold text-gray-800 mb-1">Academic Schedule Update</p>
-                                                    <p className="text-[10px] text-gray-500 leading-snug">IRS filling period for Even Semester 2025/2026 has been extended.</p>
-                                                    <span className="text-[10px] text-gray-400 mt-1 block">2 hours ago</span>
+                                                    {n.unread && <div className="absolute left-2 top-4 w-1.5 h-1.5 bg-[#5AA0FF] rounded-full"></div>}
+                                                    <p className="text-xs font-semibold text-gray-800 mb-1">{n.title}</p>
+                                                    <p className="text-[10px] text-gray-500 leading-snug">{n.desc}</p>
+                                                    <span className="text-[10px] text-gray-400 mt-1 block">{n.time}</span>
                                                 </div>
                                             ))}
                                         </div>
