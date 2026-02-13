@@ -191,7 +191,7 @@ export default function StudentDashboard() {
                             {activeTab === 'required' ? (
                                 <div className="space-y-3 p-4">
                                     {requiredCoursesNotTaken.map((course, idx) => (
-                                        <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 hover:border-[#5AA0FF]/40 hover:shadow-md transition-all group flex items-start justify-between">
+                                        <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 hover:border-[#5AA0FF]/40 hover:shadow-md transition-all group flex items-start justify-between cursor-pointer">
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0 border border-red-100 font-bold text-xs mt-0.5">
                                                     {course.sks}
@@ -204,9 +204,6 @@ export default function StudentDashboard() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button className="text-sm font-bold text-[#5AA0FF] opacity-0 group-hover:opacity-100 transition-opacity bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg">
-                                                Plan course
-                                            </button>
                                         </div>
                                     ))}
 

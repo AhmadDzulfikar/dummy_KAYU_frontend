@@ -98,11 +98,13 @@ export default function StudentLayout({
                             <div>
                                 <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Student Dashboard</h1>
                                 <div className="flex items-center text-xs md:text-sm text-gray-500 mt-0.5 space-x-2">
+                                    <span className="font-medium text-gray-600">Term 3</span>
+                                    <span className="hidden sm:inline text-gray-300">•</span>
                                     <span className="flex items-center">
-                                        Evaluation status: <span className="ml-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold tracking-wide uppercase">Safe</span>
+                                        Evaluation: <span className="ml-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold tracking-wide uppercase">Safe</span>
                                     </span>
-                                    <span className="hidden sm:inline">•</span>
-                                    <span className="hidden sm:inline">Yudisium status: Not eligible</span>
+                                    <span className="hidden sm:inline text-gray-300">•</span>
+                                    <span className="hidden sm:inline">Yudisium: Not eligible</span>
                                 </div>
                             </div>
                         </div>
