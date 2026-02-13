@@ -14,8 +14,8 @@ export default function StudentDashboard() {
 
     // Dummy Data
     const summaryData = [
-        { label: 'Regular Credits', value: '138', sub: 'Course SKS only' },
-        { label: 'Completed', value: '24/40', sub: 'Required Courses' },
+        { label: 'Regular Credits', value: '144', sub: 'Course SKS only' },
+        { label: 'Completed', value: '40/40', sub: 'Required Courses' },
         { label: 'GPA (IPK)', value: '3.28', sub: 'Scale 4.0' },
         { label: 'Transfer Credits', value: '6', sub: 'Counted separately', highlight: true },
     ];
@@ -28,14 +28,7 @@ export default function StudentDashboard() {
         { gpa: '≤ 2.0', credit: 12, label: 'Poor' },
     ];
 
-    const requiredCoursesNotTaken = [
-        { code: 'CSGE602022', name: 'Software Engineering', sks: 4 },
-        { code: 'CSGE602055', name: 'Operating Systems', sks: 4 },
-        { code: 'CSGE603331', name: 'Information Retrieval', sks: 3 },
-        { code: 'CSGE604123', name: 'Machine Learning', sks: 3 },
-        { code: 'CSGE602011', name: 'Computer Networks', sks: 4 },
-        { code: 'CSGE602005', name: 'Database Systems', sks: 4 },
-    ];
+    const requiredCoursesNotTaken: { code: string; name: string; sks: number }[] = [];
 
     const requiredCoursesTaken = [
         { code: 'CSGE601010', name: 'Programming Foundations 1', sks: 4, grade: 'A', semester: 'Term 1' },
@@ -60,20 +53,20 @@ export default function StudentDashboard() {
                 ))}
             </section>
 
-            {/* Call to Action Banner */}
-            <div className="bg-gradient-to-r from-blue-600 to-[#5AA0FF] rounded-2xl shadow-lg shadow-blue-200 text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+            {/* Call to Action Banner - ELIGIBLE STATE */}
+            <div className="bg-gradient-to-r from-green-600 to-green-500 rounded-2xl shadow-lg shadow-green-200 text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shrink-0 border border-white/30">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <Check className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold">Check your Graduation Eligibility</h3>
-                        <p className="text-blue-100 text-sm opacity-90">Verify if you meet all requirements for Yudisium.</p>
+                        <h3 className="text-lg font-bold">You’re eligible for Yudisium</h3>
+                        <p className="text-green-50 text-sm opacity-90">All key requirements are met. You can proceed to submit.</p>
                     </div>
                 </div>
                 <Link
                     href="/student/graduation-calculator"
-                    className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                    className="bg-white text-green-600 px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
                 >
                     Go to Graduation Calculator
                 </Link>
@@ -113,7 +106,7 @@ export default function StudentDashboard() {
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                     <span className="block text-xs text-gray-500 font-semibold mb-1">Total Regular</span>
-                                    <span className="text-xl font-bold text-gray-900">138</span>
+                                    <span className="text-xl font-bold text-gray-900">144</span>
                                 </div>
                                 <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
                                     <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Max Next SKS</span>
@@ -165,7 +158,7 @@ export default function StudentDashboard() {
                                         className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'required' ? 'bg-white shadow-sm text-[#5AA0FF] ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-700'}`}
                                     >
                                         Required Not Taken
-                                        <span className="ml-2 bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold">6</span>
+                                        <span className="ml-2 bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold">0</span>
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('taken')}
@@ -190,22 +183,32 @@ export default function StudentDashboard() {
                         <div className="flex-1 bg-gray-50/30 p-2 overflow-y-auto custom-scrollbar">
                             {activeTab === 'required' ? (
                                 <div className="space-y-3 p-4">
-                                    {requiredCoursesNotTaken.map((course, idx) => (
-                                        <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 hover:border-[#5AA0FF]/40 hover:shadow-md transition-all group flex items-start justify-between cursor-pointer">
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0 border border-red-100 font-bold text-xs mt-0.5">
-                                                    {course.sks}
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-bold text-gray-800 text-base group-hover:text-[#5AA0FF] transition-colors">{course.name}</h4>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{course.code}</span>
-                                                        <span className="text-xs text-red-500 font-medium px-2 py-0.5 bg-red-50 rounded-full">Not Taken</span>
+                                    {requiredCoursesNotTaken.length > 0 ? (
+                                        requiredCoursesNotTaken.map((course, idx) => (
+                                            <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 hover:border-[#5AA0FF]/40 hover:shadow-md transition-all group flex items-start justify-between cursor-pointer">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0 border border-red-100 font-bold text-xs mt-0.5">
+                                                        {course.sks}
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-800 text-base group-hover:text-[#5AA0FF] transition-colors">{course.name}</h4>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{course.code}</span>
+                                                            <span className="text-xs text-red-500 font-medium px-2 py-0.5 bg-red-50 rounded-full">Not Taken</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        ))
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                                            <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-4">
+                                                <CheckCircle className="w-8 h-8" />
+                                            </div>
+                                            <h3 className="text-gray-900 font-bold text-lg">All required courses completed!</h3>
+                                            <p className="text-gray-500 text-sm max-w-xs mt-1">You have fulfilled the mandatory coursework requirements.</p>
                                         </div>
-                                    ))}
+                                    )}
 
                                     <div className="mt-8 pt-8 border-t border-dashed border-gray-200 text-center">
                                         <p className="text-sm text-gray-500">Need to check External Credits?</p>

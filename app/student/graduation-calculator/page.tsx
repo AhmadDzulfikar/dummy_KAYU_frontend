@@ -9,13 +9,13 @@ import {
 } from '../components/Icons';
 
 export default function GraduationCalculatorPage() {
-    const [modalType, setModalType] = useState<'none' | 'warning' | 'success'>('none');
+    const [modalType, setModalType] = useState<'none' | 'warning' | 'confirm' | 'success'>('none');
     const [submissionStatus, setSubmissionStatus] = useState<'none' | 'pending'>('none');
 
-    // Dummy Requirements
+    // Dummy Requirements (ELIGIBLE STATE)
     const requirements = {
-        regularCredits: { current: 138, target: 144, met: false },
-        requiredCourses: { current: 24, target: 40, met: false },
+        regularCredits: { current: 144, target: 144, met: true },
+        requiredCourses: { current: 40, target: 40, met: true },
         gpa: { current: 3.28, min: 2.0, met: true },
         transferCredits: 6
     };
@@ -26,8 +26,7 @@ export default function GraduationCalculatorPage() {
         if (!isEligible) {
             setModalType('warning');
         } else {
-            // Ideally a 'confirm' modal for safe state too, but simplified for this prompt to just handle the dummy flow
-            setModalType('success'); // Or a 'ready' confirmation, but let's assume direct success for the happy path dummy
+            setModalType('confirm');
         }
     };
 
@@ -47,8 +46,7 @@ export default function GraduationCalculatorPage() {
             <header className="text-center space-y-3 pt-6">
                 <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Graduation Calculator</h1>
                 <p className="text-gray-500 max-w-2xl mx-auto text-base">
-                    Eligibility is strictly based on <span className="font-bold text-gray-700">regular course credits</span>,
-                    required courses, and GPA. Transfer credits are tracked separately.
+                    Check eligibility and submit yudisium.
                 </p>
             </header>
 
@@ -219,6 +217,37 @@ export default function GraduationCalculatorPage() {
                                 className="flex-1 py-3 rounded-xl bg-[#5AA0FF] text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-100"
                             >
                                 Submit anyway
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Confirm Modal */}
+            {modalType === 'confirm' && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-8 relative animate-in zoom-in-95 duration-200">
+                        <div className="w-16 h-16 bg-blue-100 text-[#5AA0FF] rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle className="w-8 h-8" />
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Submit yudisium?</h3>
+                        <p className="text-gray-500 text-center text-sm leading-relaxed mb-6">
+                            All requirements appear met. Continue submission?
+                        </p>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setModalType('none')}
+                                className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmSubmitAnyway}
+                                className="flex-1 py-3 rounded-xl bg-[#5AA0FF] text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-100"
+                            >
+                                Submit
                             </button>
                         </div>
                     </div>

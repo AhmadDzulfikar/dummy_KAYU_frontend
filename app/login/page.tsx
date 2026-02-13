@@ -24,7 +24,7 @@ export default function LoginPage() {
         router.push('/student/aman-belum-eligible');
       }
       else if (username === 'AmanDua' && password === 'Eligible') {
-        router.push('/student/aman-eligible');
+        router.push('/student/dashboard');
       }
       else if (username === 'WarningSatu' && password === 'BelumEligible') {
         router.push('/student/warning-belum-eligible');
