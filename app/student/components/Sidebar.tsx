@@ -65,24 +65,21 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 `}
             >
                 {/* Logo Area */}
-                <div className={`flex items-center h-16 px-4 border-b border-gray-100 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-                    {!collapsed && (
-                        <div className="flex items-center space-x-2">
-                            {/* Placeholder Logo */}
-                            <div className="w-8 h-8 bg-[#5AA0FF] rounded-lg flex items-center justify-center text-white font-bold">K</div>
-                            <span className="font-bold text-lg text-gray-800 tracking-tight">KAYU</span>
-                        </div>
-                    )}
-                    {collapsed && (
-                        <div className="w-8 h-8 bg-[#5AA0FF] rounded-lg flex items-center justify-center text-white font-bold">K</div>
+                <div className={`flex items-center h-16 px-6 border-b border-gray-100 ${collapsed ? 'justify-center' : 'justify-start'}`}>
+                    {!collapsed ? (
+                        <span className="font-bold text-sm text-gray-800 tracking-tight leading-tight">
+                            KALKULATOR<br />YUDISIUM
+                        </span>
+                    ) : (
+                        <div className="w-8 h-8 bg-[#5AA0FF] rounded-lg flex items-center justify-center text-white font-bold text-xs">KY</div>
                     )}
 
                     {/* Desktop Collapse Button */}
                     <button
                         onClick={toggleCollapse}
-                        className="hidden md:flex p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
+                        className="hidden md:flex absolute right-4 p-1 rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
                     >
-                        {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+                        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                     </button>
                     {/* Mobile Close Button (Implicit via overlay, but could add X here) */}
                 </div>
@@ -90,8 +87,17 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-4 flex flex-col justify-between">
                     <ul className="space-y-1 px-3">
-                        {menuItems.map((item) => {
-                            const isActive = pathname === item.href || (item.name === 'Academic Evaluation' && pathname.includes('aman-belum-eligible'));
+                        {[
+                            { name: 'Dashboard', icon: LayoutDashboard, href: '/student/aman-belum-eligible' },
+                            { name: 'Graduation Calculator', icon: Calculator, href: '/student/graduation-calculator' },
+                            { name: 'Credit Transfer List', icon: ArrowRightLeft, href: '/student/credit-transfer' },
+                        ].map((item) => {
+                            // Active logic: 
+                            // If plain Dashboard, active on /dashboard or /aman-belum-eligible
+                            // Otherwise strict match
+                            const isActive = item.name === 'Dashboard'
+                                ? (pathname === '/student/dashboard' || pathname.includes('aman-belum-eligible'))
+                                : pathname === item.href;
 
                             return (
                                 <li key={item.name}>
@@ -111,8 +117,6 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                         {!collapsed && (
                                             <span className="font-medium text-sm">{item.name}</span>
                                         )}
-
-                                        {/* Tooltip for collapsed state could go here, but using title attribute for simplicity */}
                                     </Link>
                                 </li>
                             );
@@ -121,7 +125,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
                     {/* Secondary Navigation */}
                     <ul className="space-y-1 px-3 pt-4 border-t border-gray-100 mt-2">
-                        {secondaryItems.map((item) => (
+                        {secondaryItems.filter(item => item.name !== 'Notifications').map((item) => (
                             <li key={item.name}>
                                 <Link
                                     href={item.href}

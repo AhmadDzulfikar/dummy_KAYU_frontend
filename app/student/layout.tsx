@@ -81,7 +81,8 @@ export default function StudentLayout({
                  Let's proceed.
                 */}
 
-                <div className="flex-1 flex flex-col md:pl-64 min-h-screen transition-all duration-300">
+                {/* Content Wrapper */}
+                <div className="flex-1 flex flex-col min-h-screen">
                     {/* Header */}
                     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 md:px-8 flex items-center justify-between">
 
