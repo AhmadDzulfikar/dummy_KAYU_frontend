@@ -30,13 +30,27 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         setCollapsed(!collapsed);
     };
 
+    // Determine context (Eligible vs Not Eligible) based on current path
+    const isNotEligibleContext = pathname.includes('aman-belum-eligible') || pathname.includes('not-eligible');
+
     const menuItems = [
-        { name: 'Dashboard', icon: LayoutDashboard, href: '/student/dashboard' },
-        { name: 'Course Tracking', icon: BookOpen, href: '/student/course-tracking' },
-        { name: 'Academic Evaluation', icon: ClipboardCheck, href: '/student/aman-belum-eligible' }, // Active for this demo
-        { name: 'Graduation Calculator', icon: Calculator, href: '/student/graduation-calculator' },
-        { name: 'Credit Transfer', icon: ArrowRightLeft, href: '/student/credit-transfer' },
-        { name: 'External Courses', icon: Map, href: '/student/external-courses' },
+        {
+            name: 'Dashboard',
+            icon: LayoutDashboard,
+            href: isNotEligibleContext ? '/student/aman-belum-eligible' : '/student/dashboard'
+        },
+
+        {
+            name: 'Graduation Calculator',
+            icon: Calculator,
+            href: isNotEligibleContext ? '/student/graduation-calculator/not-eligible' : '/student/graduation-calculator'
+        },
+
+        {
+            name: 'Credit Transfer List',
+            icon: ArrowRightLeft,
+            href: isNotEligibleContext ? '/student/credit-transfer/not-eligible' : '/student/credit-transfer'
+        },
     ];
 
     const secondaryItems = [
@@ -87,11 +101,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-4 flex flex-col justify-between">
                     <ul className="space-y-1 px-3">
-                        {[
-                            { name: 'Dashboard', icon: LayoutDashboard, href: '/student/dashboard' },
-                            { name: 'Graduation Calculator', icon: Calculator, href: '/student/graduation-calculator' },
-                            { name: 'Credit Transfer List', icon: ArrowRightLeft, href: '/student/credit-transfer' },
-                        ].map((item) => {
+                        {menuItems.map((item) => {
                             // Active logic: 
                             const isActive = pathname === item.href;
 
