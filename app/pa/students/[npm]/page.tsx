@@ -3,13 +3,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-// Dummy Data (Mirrors Dashboard Data for consistency)
-const STUDENTS_DB: Record<string, any> = {
-    '2206081234': { name: 'Gede Bagus', program: 'Computer Science', batch: 2022, status: 'Aktif', gpa: 3.85, credits: 88, phone: '081234567890' },
-    '2206082345': { name: 'Ni Putu Sari', program: 'Computer Science', batch: 2022, status: 'Aktif', gpa: 3.92, credits: 90, phone: '081234567891' },
-    '2306083456': { name: 'Wayan Adi', program: 'Computer Science', batch: 2023, status: 'Cuti', gpa: 3.50, credits: 45, phone: '081234567892' },
-    // ... fallback for others if accessed directly
-};
+import { STUDENTS_DATA, Student } from '../../data';
 
 // Dummy Course Data
 const COURSES_TAKEN = [
@@ -41,15 +35,18 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
     const { npm } = params;
 
     // Find student or use a generic fallback if testing with random IDs
-    const student = STUDENTS_DB[npm] || {
+    const student: Student = STUDENTS_DATA.find(s => s.npm === npm) || {
         name: 'Unknown Student',
         npm: npm,
         program: 'Computer Science',
         batch: 2022,
         status: 'Aktif',
         gpa: 3.00,
+        ips: 3.00,
         credits: 60,
-        phone: '-'
+        phone: '-',
+        isAtRisk: false,
+        maxSksNext: 21
     };
 
     return (
@@ -117,6 +114,84 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                 <div className="text-4xl font-extrabold text-gray-800">{student.credits}</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* NEW: Academic Evaluation Section */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0_2px_15px_rgb(0,0,0,0.05)] border border-gray-100">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 pb-4">
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                            Academic Evaluation
+                            {student.isAtRisk ? (
+                                <span className="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-red-200">
+                                    At Risk (Warning)
+                                </span>
+                            ) : (
+                                <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-emerald-200">
+                                    Safe
+                                </span>
+                            )}
+                        </h2>
+                        <p className="text-gray-500 text-sm mt-1">
+                            Evaluation based on academic performance and study progress.
+                        </p>
+                    </div>
+                    {student.maxSksNext && (
+                        <div className="mt-4 md:mt-0 bg-blue-50 border border-blue-100 px-5 py-3 rounded-xl text-right">
+                            <div className="text-xs text-blue-500 font-bold uppercase tracking-wider">Max SKS Next Term</div>
+                            <div className="text-2xl font-extrabold text-[#5AA0FF]">{student.maxSksNext} <span className="text-sm font-medium text-blue-400">Credits</span></div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="md:col-span-1 space-y-4">
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span className="text-sm text-gray-500 font-medium">Current IPS</span>
+                            <span className="font-mono font-bold text-gray-900">{student.ips ? student.ips.toFixed(2) : '-'}</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span className="text-sm text-gray-500 font-medium">Standard GPA (IPK)</span>
+                            <span className="font-mono font-bold text-gray-900">{student.gpa.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span className="text-sm text-gray-500 font-medium">Total Credits</span>
+                            <span className="font-mono font-bold text-gray-900">{student.credits}</span>
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-2">
+                        {student.isAtRisk ? (
+                            <div className="bg-red-50 border border-red-100 rounded-xl p-5 h-full">
+                                <h3 className="text-sm font-bold text-red-800 uppercase tracking-wide mb-3 flex items-center">
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    Triggered Warning Reasons
+                                </h3>
+                                <ul className="space-y-2">
+                                    {student.riskReasons?.map((reason, idx) => (
+                                        <li key={idx} className="flex items-start text-sm text-red-700">
+                                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 bg-red-400 rounded-full flex-shrink-0"></span>
+                                            {reason}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="mt-4 text-xs text-red-600 italic">
+                                    Please schedule a counseling session with this student to discuss their study plan.
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="h-full bg-emerald-50/50 border border-emerald-100 rounded-xl p-5 flex flex-col justify-center items-center text-center">
+                                <svg className="w-12 h-12 text-emerald-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p className="text-emerald-800 font-medium">Academic Performance is Good</p>
+                                <p className="text-emerald-600 text-xs mt-1">Student is on track with no major issues detected.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -221,7 +296,7 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <span className={`font-bold ${course.grade.startsWith('A') ? 'text-emerald-500' :
-                                                    course.grade.startsWith('B') ? 'text-[#5AA0FF]' : 'text-gray-500'
+                                                course.grade.startsWith('B') ? 'text-[#5AA0FF]' : 'text-gray-500'
                                                 }`}>
                                                 {course.grade}
                                             </span>

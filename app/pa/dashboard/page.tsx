@@ -3,29 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
-// Dummy Data
-const STUDENTS = [
-    // Computer Science (CS)
-    { npm: '2206081234', name: 'Gede Bagus', program: 'Computer Science', batch: 2022, status: 'Aktif', gpa: 3.85, credits: 88 },
-    { npm: '2206082345', name: 'Ni Putu Sari', program: 'Computer Science', batch: 2022, status: 'Aktif', gpa: 3.92, credits: 90 },
-    { npm: '2306083456', name: 'Wayan Adi', program: 'Computer Science', batch: 2023, status: 'Cuti', gpa: 3.50, credits: 45 },
-    { npm: '2306084567', name: 'Made Krisna', program: 'Computer Science', batch: 2023, status: 'Aktif', gpa: 3.10, credits: 50 },
-    { npm: '2406085678', name: 'Ketut Suka', program: 'Computer Science', batch: 2024, status: 'Aktif', gpa: 3.75, credits: 24 },
-    { npm: '2206086789', name: 'Komang Dewi', program: 'Computer Science', batch: 2022, status: 'Aktif', gpa: 2.90, credits: 80 },
-    { npm: '2306087890', name: 'Putu Eka', program: 'Computer Science', batch: 2023, status: 'Aktif', gpa: 3.45, credits: 52 },
-    { npm: '2406088901', name: 'Kadek Agus', program: 'Computer Science', batch: 2024, status: 'Cuti', gpa: 0, credits: 0 },
-
-    // Information Systems (IS)
-    { npm: '2206091234', name: 'Siti Aminah', program: 'Information Systems', batch: 2022, status: 'Aktif', gpa: 3.65, credits: 86 },
-    { npm: '2206092345', name: 'Budi Santoso', program: 'Information Systems', batch: 2022, status: 'Aktif', gpa: 3.30, credits: 82 },
-    { npm: '2306093456', name: 'Rina Wati', program: 'Information Systems', batch: 2023, status: 'Aktif', gpa: 3.88, credits: 55 },
-    { npm: '2306094567', name: 'Doni Pratama', program: 'Information Systems', batch: 2023, status: 'Aktif', gpa: 2.80, credits: 40 },
-    { npm: '2406095678', name: 'Eko Saputra', program: 'Information Systems', batch: 2024, status: 'Aktif', gpa: 3.55, credits: 22 },
-    { npm: '2406096789', name: 'Fani Indah', program: 'Information Systems', batch: 2024, status: 'Cuti', gpa: 3.20, credits: 18 },
-    { npm: '2206097890', name: 'Gilang Ramadhan', program: 'Information Systems', batch: 2022, status: 'Aktif', gpa: 3.15, credits: 84 },
-    { npm: '2306098901', name: 'Hani Susanti', program: 'Information Systems', batch: 2023, status: 'Aktif', gpa: 3.95, credits: 58 },
-];
+import { STUDENTS_DATA } from '../data';
 
 export default function PADashboard() {
     const router = useRouter();
@@ -61,7 +39,7 @@ export default function PADashboard() {
     };
 
     // Filter Logic
-    const filteredStudents = STUDENTS.filter(student => {
+    const filteredStudents = STUDENTS_DATA.filter(student => {
         // 1. Program Filter (Strict)
         if (student.program !== activeProgram) return false;
 

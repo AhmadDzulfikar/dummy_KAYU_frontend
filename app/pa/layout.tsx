@@ -41,16 +41,38 @@ export default function PALayout({ children }: { children: React.ReactNode }) {
                         Dashboard
                     </Link>
 
+                    <Link
+                        href="/pa/evaluation"
+                        className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive('/pa/evaluation')
+                            ? 'bg-blue-50 text-[#5AA0FF]'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                    >
+                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Academic Evaluation
+                    </Link>
+
                     <div className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6">
                         Account
                     </div>
 
-                    <button className="w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
+                    <Link
+                        href="/pa/notifications"
+                        className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive('/pa/notifications')
+                            ? 'bg-blue-50 text-[#5AA0FF]'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                    >
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                         Notifications
-                    </button>
+                        <span className="ml-auto bg-red-100 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            2
+                        </span>
+                    </Link>
 
                     <button className="w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
