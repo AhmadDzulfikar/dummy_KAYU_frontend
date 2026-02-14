@@ -204,12 +204,10 @@ export default function PADashboard() {
                                     <tr
                                         key={student.npm}
                                         onClick={() => router.push(`/pa/students/${student.npm}`)}
-                                        className="bg-white hover:bg-blue-50/30 cursor-pointer transition-colors group"
+                                        className="bg-white hover:bg-blue-50 cursor-pointer transition-colors border-l-4 border-transparent hover:border-[#5AA0FF]"
                                     >
                                         <td className="px-6 py-4 font-medium text-gray-900 group-hover:text-[#5AA0FF]">
-                                            <Link href={`/pa/students/${student.npm}`} className="block w-full h-full" onClick={(e) => e.stopPropagation()}>
-                                                {student.name}
-                                            </Link>
+                                            {student.name}
                                         </td>
                                         <td className="px-6 py-4">{student.npm}</td>
                                         <td className="px-6 py-4">{student.batch}</td>
