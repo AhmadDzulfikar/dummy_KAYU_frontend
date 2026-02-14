@@ -22,21 +22,33 @@ export default function LoginPage() {
       // Dummy Account Checks
 
       // 1. Define Dummy Database
-      const accounts: Record<string, { pass: string, roles: string[] }> = {
+      const accounts: Record<string, { pass: string, roles: string[], programs?: string[] }> = {
         // Students
         'AmanSatu': { pass: 'BelumEligible', roles: ['Student-NotEligible'] },
         'AmanDua': { pass: 'Eligible', roles: ['Student-Eligible'] },
         'WarningSatu': { pass: 'BelumEligible', roles: ['Student-Warning'] },
 
         // Staff / Non-Student Roles
-        'DosenPA': { pass: 'DosenPA', roles: ['Academic Advisor'] },
+        'DosenPA': { pass: 'DosenPA', roles: ['Academic Advisor'], programs: ['Computer Science'] },
         'TimYudisium': { pass: 'TimYudisium', roles: ['Yudisium Team'] },
         'ManajerAkademik': { pass: 'ManajerAkademik', roles: ['Academic Manager'] },
         'Sekretariat': { pass: 'Sekretariat', roles: ['Secretariat'] },
         'Kaprodi': { pass: 'Kaprodi', roles: ['Head of Program'] },
 
         // Multi-Role
-        'MultiRole': { pass: 'MultiRole', roles: ['Academic Advisor', 'Yudisium Team'] }
+        'MultiRole': { pass: 'MultiRole', roles: ['Academic Advisor', 'Yudisium Team'], programs: ['Computer Science'] },
+
+        // PA Specific Scenarios
+        'PA_SingleProdi': {
+          pass: 'PA_SingleProdi',
+          roles: ['Academic Advisor'],
+          programs: ['Computer Science']
+        },
+        'PA_MultiProdi': {
+          pass: 'PA_MultiProdi',
+          roles: ['Academic Advisor'],
+          programs: ['Computer Science', 'Information Systems']
+        }
       };
 
       // Role -> Path Mapping
@@ -55,6 +67,8 @@ export default function LoginPage() {
         // 1. Clear previous session data
         localStorage.removeItem('userRoles');
         localStorage.removeItem('lastUsedRole');
+        localStorage.removeItem('userPrograms');
+        localStorage.removeItem('activeProgram');
 
         // 2. Handle Students Specials
         if (user.roles[0].startsWith('Student')) {
@@ -67,6 +81,27 @@ export default function LoginPage() {
         // 3. Handle Staff Roles
         // Store roles for the session
         localStorage.setItem('userRoles', JSON.stringify(user.roles));
+        if (user.programs) {
+          localStorage.setItem('userPrograms', JSON.stringify(user.programs));
+        }
+
+        // Special Login Logic for Academic Advisor
+        if (user.roles.includes('Academic Advisor')) {
+          // Check if it's the only role or if it's the specific target for PA accounts
+          // For simplicity in this dummy, if username starts with PA_ or DosenPA, treat as PA flow
+          const isPAUser = username.startsWith('PA_') || username === 'DosenPA';
+
+          if (isPAUser) {
+            if (user.programs && user.programs.length > 1) {
+              router.push('/pa/select-program');
+              return;
+            } else if (user.programs && user.programs.length === 1) {
+              localStorage.setItem('activeProgram', user.programs[0]);
+              router.push('/pa/dashboard');
+              return;
+            }
+          }
+        }
 
         // Check default role (if implemented, for now we follow the simple rule: 1 role = auto, >1 = select)
         const savedDefault = localStorage.getItem('defaultRole');
@@ -239,6 +274,8 @@ export default function LoginPage() {
                 <div className="pt-2 font-bold text-gray-400">Staff (pw = username):</div>
                 <div>DosenPA, TimYudisium, ManajerAkademik</div>
                 <div>Sekretariat, Kaprodi, MultiRole</div>
+                <div className="pt-2 font-bold text-gray-400">PA Demo:</div>
+                <div>PA_SingleProdi, PA_MultiProdi</div>
               </div>
             </div>
 
