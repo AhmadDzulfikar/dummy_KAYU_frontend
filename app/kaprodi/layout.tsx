@@ -9,44 +9,23 @@ export default function KaprodiLayout({ children }: { children: React.ReactNode 
     const router = useRouter();
 
     const [activeProdi, setActiveProdi] = useState<string | null>(null);
-    const [role, setRole] = useState<'single' | 'multi'>('multi'); // Default mock role
 
-    // Check auth/role on mount
+    // Simple Auth & Context Logic (Revised: Single Prodi Only)
     useEffect(() => {
-        // Mock: Retrieve role and active prodi from storage
-        const storedRole = localStorage.getItem('kaprodiRole') as 'single' | 'multi';
-        const storedProdi = localStorage.getItem('kaprodiActiveProdi');
+        const forcedProdi = 'Ilmu Komputer';
 
-        if (storedRole) setRole(storedRole);
+        // Always enforce this prodi for now
+        localStorage.setItem('kaprodiActiveProdi', forcedProdi);
+        localStorage.setItem('kaprodiRole', 'single');
+        setActiveProdi(forcedProdi);
 
-        // If single role, force set prodi
-        if (storedRole === 'single') {
-            const forcedProdi = 'Ilmu Komputer';
-            localStorage.setItem('kaprodiActiveProdi', forcedProdi);
-            setActiveProdi(forcedProdi);
-        } else {
-            // Multi role
-            if (storedProdi) {
-                setActiveProdi(storedProdi);
-            } else {
-                // If no prodi selected and not on selection page, redirect
-                if (pathname !== '/kaprodi/pilih-prodi') {
-                    router.push('/kaprodi/pilih-prodi');
-                }
-            }
-        }
-    }, [pathname, router]);
+    }, [router]);
 
     const handleLogout = () => {
         localStorage.removeItem('kaprodiActiveProdi');
-        // In real app, clear auth tokens
+        localStorage.removeItem('kaprodiRole');
         router.push('/');
     };
-
-    // If on selection page or root, render simplified layout or children
-    if (pathname === '/kaprodi/pilih-prodi') {
-        return <>{children}</>;
-    }
 
     const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
 
@@ -100,37 +79,9 @@ export default function KaprodiLayout({ children }: { children: React.ReactNode 
                         onClick={handleLogout}
                         className="w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-colors mt-auto"
                     >
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
+                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                         Keluar
                     </button>
-
-                    {/* DEBUG: Toggle Role */}
-                    <div className="px-3 mt-8 pt-4 border-t border-gray-100">
-                        <p className="text-[10px] uppercase text-gray-400 font-bold mb-2">Debug Mode</p>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => {
-                                    localStorage.setItem('kaprodiRole', 'single');
-                                    window.location.reload();
-                                }}
-                                className={`text-[10px] px-2 py-1 rounded border ${role === 'single' ? 'bg-gray-200 font-bold' : 'text-gray-500'}`}
-                            >
-                                Single
-                            </button>
-                            <button
-                                onClick={() => {
-                                    localStorage.setItem('kaprodiRole', 'multi');
-                                    localStorage.removeItem('kaprodiActiveProdi');
-                                    window.location.href = '/kaprodi/pilih-prodi';
-                                }}
-                                className={`text-[10px] px-2 py-1 rounded border ${role === 'multi' ? 'bg-gray-200 font-bold' : 'text-gray-500'}`}
-                            >
-                                Multi
-                            </button>
-                        </div>
-                    </div>
                 </nav>
             </aside>
 
@@ -139,30 +90,11 @@ export default function KaprodiLayout({ children }: { children: React.ReactNode 
                 {/* Top Header */}
                 <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-20 px-8 flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                        {/* Program Indicator / Switcher */}
-                        {role === 'multi' ? (
-                            activeProdi ? (
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500">Prodi Aktif:</span>
-                                    <button
-                                        onClick={() => router.push('/kaprodi/pilih-prodi')}
-                                        className="flex items-center bg-blue-50 text-[#5AA0FF] px-3 py-1.5 rounded-lg text-sm font-bold border border-blue-100 hover:bg-blue-100 transition-colors"
-                                    >
-                                        {activeProdi}
-                                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            ) : (
-                                <span className="text-gray-400 italic text-sm">Belum memilih prodi...</span>
-                            )
-                        ) : (
-                            <div className="flex items-center bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 cursor-default">
-                                <span className="mr-2 text-gray-500 font-normal">Prodi:</span>
-                                {activeProdi}
-                            </div>
-                        )}
+                        {/* Static Single Prodi Indicator */}
+                        <div className="flex items-center bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 cursor-default">
+                            <span className="mr-2 text-gray-500 font-normal">Prodi:</span>
+                            {activeProdi}
+                        </div>
                     </div>
 
                     <div className="flex items-center space-x-6">
@@ -180,7 +112,7 @@ export default function KaprodiLayout({ children }: { children: React.ReactNode 
 
                 {/* Page Content */}
                 <main className="flex-1 p-8 overflow-y-auto">
-                    <div className="max-w-6xl mx-auto">
+                    <div className="max-w-6xl mx-auto animate-in fade-in duration-300">
                         {children}
                     </div>
                 </main>
