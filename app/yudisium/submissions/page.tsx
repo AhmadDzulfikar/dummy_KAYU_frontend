@@ -4,11 +4,18 @@ import { useState } from 'react';
 import { SUBMISSIONS, SubmissionStatus, CompletenessStatus } from '@/app/yudisium/data';
 import { useRouter } from 'next/navigation';
 
+type SortField = 'program' | 'batch' | null;
+type SortDirection = 'asc' | 'desc';
+
 export default function SubmissionsPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
+
+    // Sorting state
+    const [sortField, setSortField] = useState<SortField>(null);
+    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
     // Filtering
     const filtered = SUBMISSIONS.filter(sub => {
@@ -20,23 +27,62 @@ export default function SubmissionsPage() {
         );
     });
 
+    // Helper to map Prodi to Code (IK/SI)
+    const getProdiCode = (prodiName: string) => {
+        if (prodiName === 'Computer Science') return 'IK';
+        if (prodiName === 'Information Systems') return 'SI';
+        return prodiName; // Fallback
+    };
+
+    // Sorting Logic
+    const sorted = [...filtered].sort((a, b) => {
+        if (!sortField) return 0;
+
+        let valA: string | number = '';
+        let valB: string | number = '';
+
+        if (sortField === 'program') {
+            valA = getProdiCode(a.prodi);
+            valB = getProdiCode(b.prodi);
+        } else if (sortField === 'batch') {
+            valA = a.batch;
+            valB = b.batch;
+        }
+
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+
     // Pagination check
-    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-    // Reset page if filtered results are fewer
+    const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
     if (page > totalPages && totalPages > 0) {
         setPage(1);
     }
-    const displayed = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    const displayed = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     const handleRowClick = (id: string) => {
         router.push(`/yudisium/submissions/${id}`);
     }
 
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const getSortIcon = (field: SortField) => {
+        if (sortField !== field) return <span className="text-gray-300 ml-1">↕</span>;
+        return sortDirection === 'asc' ? <span className="text-[#5AA0FF] ml-1">↑</span> : <span className="text-[#5AA0FF] ml-1">↓</span>;
+    };
+
     // Helper for chips
     const getStatusColor = (status: SubmissionStatus) => {
         switch (status) {
             case 'Submitted': return 'bg-blue-100 text-blue-800';
-            case 'In Review': return 'bg-yellow-100 text-yellow-800';
             case 'Approved': return 'bg-green-100 text-green-800';
             case 'Rejected': return 'bg-red-100 text-red-800';
             default: return 'bg-gray-100 text-gray-800';
@@ -71,9 +117,8 @@ export default function SubmissionsPage() {
                     />
                 </div>
 
-                {/* Visual filler for sorting/filter actions if needed */}
                 <div className="text-sm text-gray-500">
-                    Total: {filtered.length} submissions
+                    Total: {sorted.length} submissions
                 </div>
             </div>
 
@@ -86,7 +131,20 @@ export default function SubmissionsPage() {
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Student Name</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">NPM</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Program / Batch</th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('program')}
+                                >
+                                    Program {getSortIcon('program')}
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('batch')}
+                                >
+                                    Batch {getSortIcon('batch')}
+                                </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Completeness</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
@@ -103,10 +161,8 @@ export default function SubmissionsPage() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-[#5AA0FF] transition-colors">{sub.id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{sub.studentName}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.studentNpm}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div className="font-medium text-gray-900">{sub.prodi}</div>
-                                            <div className="text-xs text-gray-400">{sub.batch}</div>
-                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{getProdiCode(sub.prodi)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">{sub.batch}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(sub.status)}`}>
                                                 {sub.status}
@@ -122,7 +178,7 @@ export default function SubmissionsPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
+                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
                                         No data found.
                                     </td>
                                 </tr>
@@ -140,7 +196,7 @@ export default function SubmissionsPage() {
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="font-medium">{filtered.length}</span> results
+                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> of <span className="font-medium">{sorted.length}</span> results
                                 </p>
                             </div>
                             <div>

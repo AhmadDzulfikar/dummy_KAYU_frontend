@@ -1,6 +1,6 @@
 
 export type StudentStatus = 'Aktif' | 'Cuti' | 'Non-aktif';
-export type SubmissionStatus = 'Submitted' | 'In Review' | 'Approved' | 'Rejected';
+export type SubmissionStatus = 'Submitted' | 'Approved' | 'Rejected';
 export type CompletenessStatus = 'Complete' | 'Has Issues';
 
 export interface Student {
@@ -64,8 +64,9 @@ export const STUDENTS: Student[] = Array.from({ length: 50 }).map((_, i) => {
 // 2. Generate Submissions (linked to some students)
 // We'll pick the first 20 students to have submissions
 export const SUBMISSIONS: Submission[] = STUDENTS.slice(0, 20).map((student, i) => {
-    const statusOptions: SubmissionStatus[] = ['Submitted', 'In Review', 'Approved', 'Rejected'];
-    const status = statusOptions[i % 4];
+    const statusOptions: SubmissionStatus[] = ['Submitted', 'Approved', 'Rejected'];
+    // Removed 'In Review' from rotation
+    const status = statusOptions[i % 3];
 
     const isComplete = i % 3 !== 0; // some have issues
     const issues = isComplete ? [] : ['Missing TOEFL certificate', 'Transcript mismatch', 'Tuition fee unresolved'];
