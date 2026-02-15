@@ -109,7 +109,7 @@ export default function StudentDashboard() {
                                     <span className="text-xl font-bold text-gray-900">144</span>
                                 </div>
                                 <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
-                                    <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Batas SKS YAD</span>
+                                    <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Maksimal SKS</span>
                                     <span className="text-xl font-bold text-[#5AA0FF]">21</span>
                                 </div>
                             </div>
@@ -211,10 +211,6 @@ export default function StudentDashboard() {
                                     )}
 
                                     <div className="mt-8 pt-8 border-t border-dashed border-gray-200 text-center">
-                                        <p className="text-sm text-gray-500">Perlu memeriksa SKS Eksternal?</p>
-                                        <Link href="/student/credit-transfer" className="text-sm font-bold text-[#5AA0FF] hover:underline mt-1 inline-block">
-                                            Buka Daftar Transfer Kredit
-                                        </Link>
                                     </div>
                                 </div>
                             ) : (
@@ -226,7 +222,7 @@ export default function StudentDashboard() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-bold text-gray-800">Kinerja Anda bagus!</p>
-                                                <p className="text-xs text-gray-500">24 SKS Wajib selesai.</p>
+                                                <p className="text-xs text-gray-500">24 Mata Kuliah Wajib selesai.</p>
                                             </div>
                                         </div>
                                     </div>

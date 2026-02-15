@@ -27,37 +27,37 @@ interface Role {
 const ALL_ROLES: Record<string, Role> = {
     'Academic Advisor': {
         id: 'academic-advisor',
-        name: 'Academic Advisor (Dosen PA)',
-        description: 'Monitor your advisees, academic evaluation status, and warnings.',
+        name: 'Dosen Pembimbing Akademik',
+        description: 'Pantau mahasiswa bimbingan, status evaluasi akademik, dan peringatan.',
         path: '/pa/dashboard',
         icon: Users
     },
     'Yudisium Team': {
         id: 'yudisium-team',
-        name: 'Yudisium Team',
-        description: 'Review yudisium submissions and manage graduation verification.',
+        name: 'Tim Yudisium',
+        description: 'Tinjau pengajuan yudisium dan kelola verifikasi kelulusan.',
         path: '/yudisium/dashboard',
         icon: Award
     },
     'Academic Manager': {
         id: 'academic-manager',
-        name: 'Academic Manager',
-        description: 'Oversee academic evaluation rules and monitor faculty-wide status.',
-        path: '/academic-manager/dashboard',
+        name: 'Manajer Akademik',
+        description: 'Awasi aturan evaluasi akademik dan pantau status tingkat fakultas.',
+        path: '/manajer-akademik/pilih-prodi',
         icon: BookOpen
     },
     'Secretariat': {
         id: 'secretariat',
-        name: 'Secretariat',
-        description: 'Maintain administrative data and support operational processes.',
+        name: 'Sekretariat',
+        description: 'Kelola data administrasi dan dukung proses operasional.',
         path: '/secretariat/dashboard',
         icon: Briefcase
     },
     'Head of Program': {
         id: 'head-of-program',
-        name: 'Head of Program (Kaprodi)',
-        description: 'View program-level insights and oversight dashboards.',
-        path: '/kaprodi/dashboard',
+        name: 'Ketua Program Studi (Kaprodi)',
+        description: 'Lihat wawasan tingkat program studi dan dasbor pengawasan.',
+        path: '/kaprodi/dasbor',
         icon: ClipboardCheck
     }
 };
@@ -126,8 +126,8 @@ export default function SelectRolePage() {
 
                 <div className="flex items-center gap-4">
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-bold text-gray-900 leading-none">Multi-Role User</p>
-                        <p className="text-xs text-gray-500 mt-1">Logged in</p>
+                        <p className="text-sm font-bold text-gray-900 leading-none">Pengguna Multi-Peran</p>
+                        <p className="text-xs text-gray-500 mt-1">Masuk sebagai</p>
                     </div>
                     <div className="h-8 w-[1px] bg-gray-200 mx-1 hidden sm:block"></div>
                     <button
@@ -135,7 +135,7 @@ export default function SelectRolePage() {
                         className="text-sm font-medium text-red-600 hover:text-red-700 flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
                     >
                         <LogOut className="w-4 h-4" />
-                        Sign out
+                        Keluar
                     </button>
                 </div>
             </header>
@@ -145,8 +145,8 @@ export default function SelectRolePage() {
 
                 <div className="max-w-4xl w-full space-y-8">
                     <div className="text-center space-y-2">
-                        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Select Your Role</h1>
-                        <p className="text-gray-500 text-lg">Your account has multiple roles. Choose one to continue.</p>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Pilih Peran Anda</h1>
+                        <p className="text-gray-500 text-lg">Akun Anda memiliki beberapa peran. Pilih salah satu untuk melanjutkan.</p>
                     </div>
 
                     {/* Role Cards Grid */}
@@ -164,7 +164,7 @@ export default function SelectRolePage() {
                                 >
                                     {isLastUsed && (
                                         <span className="absolute top-4 right-4 bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">
-                                            Last Used
+                                            Terakhir Diakses
                                         </span>
                                     )}
 
@@ -180,7 +180,7 @@ export default function SelectRolePage() {
                                     </p>
 
                                     <div className="flex items-center text-[#5AA0FF] font-bold text-sm">
-                                        <span className="group-hover:mr-2 transition-all">Enter Dashboard</span>
+                                        <span className="group-hover:mr-2 transition-all">Masuk Dasbor</span>
                                         <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all" />
                                     </div>
                                 </button>
@@ -191,13 +191,7 @@ export default function SelectRolePage() {
                     {/* Option Checkbox */}
                     <div className="flex justify-center items-center mt-8">
                         <label className="flex items-center space-x-3 cursor-pointer group text-gray-500 hover:text-gray-700 transition-colors">
-                            <input
-                                type="checkbox"
-                                checked={selectedDefault}
-                                onChange={(e) => setSelectedDefault(e.target.checked)}
-                                className="w-5 h-5 rounded border-gray-300 text-[#5AA0FF] focus:ring-[#5AA0FF] transition-all cursor-pointer"
-                            />
-                            <span className="text-sm font-medium select-none">Set as default role for next login</span>
+                            
                         </label>
                     </div>
 
@@ -206,9 +200,8 @@ export default function SelectRolePage() {
 
             {/* Simple Footer */}
             <footer className="py-6 text-center text-xs text-gray-400">
-                System Version 1.0.0 • Universitas Indonesia
+                Versi Sistem 1.0.0 • Universitas Indonesia
             </footer>
-
         </div>
     );
 }

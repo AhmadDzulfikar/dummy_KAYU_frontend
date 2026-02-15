@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -31,8 +32,8 @@ const REMAINING_REQUIRED = [
     { code: 'CSGE607090', name: 'Tugas Akhir / Skripsi', credits: 6 },
 ];
 
-export default function StudentDetailPage({ params }: { params: { npm: string } }) {
-    const { npm } = params;
+export default function StudentDetailPage({ params }: { params: Promise<{ npm: string }> }) {
+    const { npm } = use(params);
 
     // Find student or use a generic fallback if testing with random IDs
     const student: Student = STUDENTS_DATA.find(s => s.npm === npm) || {
@@ -149,11 +150,11 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-1 space-y-4">
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-500 font-medium">IPS Saat Ini</span>
+                            <span className="text-sm text-gray-500 font-medium">IP Semester (IPS)</span>
                             <span className="font-mono font-bold text-gray-900">{student.ips ? student.ips.toFixed(2) : '-'}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-500 font-medium">IPK Standar</span>
+                            <span className="text-sm text-gray-500 font-medium">IP Kumulatif (IPK)</span>
                             <span className="font-mono font-bold text-gray-900">{student.gpa.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">

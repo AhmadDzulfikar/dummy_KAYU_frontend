@@ -60,7 +60,7 @@ export default function PANotifications() {
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Notifikasi</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">Notifikasi (SEJUJURNYA ISIAN NOTIFIKASI MASIH NGASAL)</h1>
                     <p className="text-gray-500 text-sm mt-1">Pembaruan tentang mahasiswa bimbingan dan peringatan akademik.</p>
                 </div>
                 <button

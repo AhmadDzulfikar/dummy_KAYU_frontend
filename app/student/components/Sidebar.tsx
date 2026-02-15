@@ -37,34 +37,25 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
     const menuItems = [
         {
-            name: 'Dashboard',
+            name: 'Dasbor',
             icon: LayoutDashboard,
             href: isWarningContext
                 ? '/student/warning-belum-eligible'
                 : (isNotEligibleContext ? '/student/aman-belum-eligible' : '/student/dashboard')
         },
-
         {
-            name: 'Graduation Calculator',
+            name: 'Kalkulator Yudisium',
             icon: Calculator,
             href: isWarningContext
                 ? '/student/graduation-calculator/warning'
                 : (isNotEligibleContext ? '/student/graduation-calculator/not-eligible' : '/student/graduation-calculator')
         },
-
-        {
-            name: 'Credit Transfer List',
-            icon: ArrowRightLeft,
-            href: isWarningContext
-                ? '/student/credit-transfer/warning'
-                : (isNotEligibleContext ? '/student/credit-transfer/not-eligible' : '/student/credit-transfer')
-        },
     ];
 
     const secondaryItems = [
-        { name: 'Notifications', icon: Bell, href: '/student/notifications' },
-        { name: 'Profile', icon: User, href: '/student/profile' },
-        { name: 'Logout', icon: LogOut, href: '/login' },
+        { name: 'Notifikasi', icon: Bell, href: '/student/notifications' },
+        { name: 'Profil', icon: User, href: '/student/profile' },
+        { name: 'Keluar', icon: LogOut, href: '/login' },
     ];
 
     return (

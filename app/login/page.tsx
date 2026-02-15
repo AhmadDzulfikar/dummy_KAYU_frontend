@@ -23,10 +23,10 @@ export default function LoginPage() {
 
       // 1. Define Dummy Database
       const accounts: Record<string, { pass: string, roles: string[], programs?: string[] }> = {
-        // Students
-        'AmanSatu': { pass: 'BelumEligible', roles: ['Student-NotEligible'] },
-        'AmanDua': { pass: 'Eligible', roles: ['Student-Eligible'] },
-        'WarningSatu': { pass: 'BelumEligible', roles: ['Student-Warning'] },
+        // Students - REVISED
+        'AmanBelumEligible': { pass: 'AmanBelumEligible', roles: ['Student-NotEligible'] },
+        'AmanEligible': { pass: 'AmanEligible', roles: ['Student-Eligible'] },
+        'WarningBelumEligible': { pass: 'WarningBelumEligible', roles: ['Student-Warning'] }, // Warning + Belum Eligible
 
         // Staff / Non-Student Roles
         'DosenPA': { pass: 'DosenPA', roles: ['Academic Advisor'], programs: ['Computer Science'] },
@@ -291,16 +291,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Helper Text for Demo Purpose (Optional, but helpful for user testing) */}
-            <div className="mt-8 pt-4 border-t border-dashed border-gray-200 text-center">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-2">Demo Accounts</p>
-              <div className="text-xs text-gray-500 space-y-1 font-mono">
-                <div>Student: AmanSatu (pw matched)</div>
-                <div className="pt-2 font-bold text-gray-400">Staff (pw = username):</div>
-                <div>DosenPA, Kaprodi, TimYudisium</div>
-                <div>ManajerAkademik</div>
-              </div>
-            </div>
+
 
           </div>
 
