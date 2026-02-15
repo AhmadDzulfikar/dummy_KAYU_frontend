@@ -64,8 +64,8 @@ export default function PADashboard() {
             {/* Header Section with Program Switcher */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Advisees Dashboard</h1>
-                    <p className="text-gray-500 text-sm mt-1">Overview of student academic progress</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Dasbor Mahasiswa Bimbingan</h1>
+                    <p className="text-gray-500 text-sm mt-1">Ringkasan kemajuan akademik mahasiswa</p>
                 </div>
 
                 {/* Program Switcher (Only visible if user has multiple programs) */}
@@ -82,7 +82,7 @@ export default function PADashboard() {
                                     }
                 `}
                             >
-                                {prog}
+                                {prog === 'Computer Science' ? 'Ilmu Komputer' : (prog === 'Information Systems' ? 'Sistem Informasi' : prog)}
                             </button>
                         ))}
                     </div>
@@ -92,11 +92,11 @@ export default function PADashboard() {
             {/* Stats Cards (Optional but good for Dashboard) */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Students</div>
+                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Mahasiswa</div>
                     <div className="text-2xl font-bold text-gray-900 mt-1">{filteredStudents.length}</div>
                 </div>
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Avg. GPA</div>
+                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Rata-rata IPK</div>
                     <div className="text-2xl font-bold text-gray-900 mt-1">
                         {filteredStudents.length > 0
                             ? (filteredStudents.reduce((acc, curr) => acc + curr.gpa, 0) / filteredStudents.length).toFixed(2)
@@ -105,13 +105,13 @@ export default function PADashboard() {
                     </div>
                 </div>
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Active Status</div>
+                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Status Aktif</div>
                     <div className="text-2xl font-bold text-emerald-600 mt-1">
                         {filteredStudents.filter(s => s.status === 'Aktif').length}
                     </div>
                 </div>
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">On Leave</div>
+                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Cuti</div>
                     <div className="text-2xl font-bold text-amber-600 mt-1">
                         {filteredStudents.filter(s => s.status === 'Cuti').length}
                     </div>
@@ -127,7 +127,7 @@ export default function PADashboard() {
                         onChange={(e) => setBatchFilter(e.target.value)}
                         className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
                     >
-                        <option value="All">All Batches</option>
+                        <option value="All">Semua Angkatan</option>
                         <option value="2022">2022</option>
                         <option value="2023">2023</option>
                         <option value="2024">2024</option>
@@ -139,9 +139,9 @@ export default function PADashboard() {
                         onChange={(e) => setStatusFilter(e.target.value)}
                         className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
                     >
-                        <option value="All">All Status</option>
-                        <option value="Aktif">Active</option>
-                        <option value="Cuti">On Leave</option>
+                        <option value="All">Semua Status</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Cuti">Cuti</option>
                     </select>
                 </div>
 
@@ -157,23 +157,22 @@ export default function PADashboard() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="block w-full p-2.5 pl-10 text-sm text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-[#5AA0FF] focus:border-[#5AA0FF] outline-none"
-                        placeholder="Search by Name or NPM..."
+                        placeholder="Cari berdasarkan Nama atau NPM..."
                     />
                 </div>
             </div>
 
-            {/* Table */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-gray-600">
                         <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
                             <tr>
-                                <th scope="col" className="px-6 py-4 font-semibold">Student Name</th>
+                                <th scope="col" className="px-6 py-4 font-semibold">Nama Mahasiswa</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">NPM</th>
-                                <th scope="col" className="px-6 py-4 font-semibold">Batch</th>
+                                <th scope="col" className="px-6 py-4 font-semibold">Angkatan</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">Status</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">GPA</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">Credits (SKS)</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">IPK</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">SKS</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -206,7 +205,7 @@ export default function PADashboard() {
                             ) : (
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500 italic">
-                                        No students found matching your filters.
+                                        Data tidak ditemukan.
                                     </td>
                                 </tr>
                             )}
@@ -214,7 +213,7 @@ export default function PADashboard() {
                     </table>
                 </div>
                 <div className="px-6 py-4 border-t border-gray-100 text-xs text-gray-400 flex justify-between items-center">
-                    <span>Showing {filteredStudents.length} students</span>
+                    <span>Menampilkan {filteredStudents.length} mahasiswa</span>
                     {/* Pagination Dummy */}
                     <div className="flex space-x-1">
                         <button className="px-2 py-1 rounded border border-gray-200 disabled:opacity-50" disabled>&lt;</button>

@@ -122,11 +122,11 @@ export default function CreditTransferPage() {
 
             {/* 1) Header & Introduction */}
             <header className="text-center space-y-4 pt-4">
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Credit Transfer List</h1>
+                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Daftar Transfer Kredit</h1>
                 <p className="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
-                    Manage your transferred credits (MBKM, Exchange, Competitions) here.
+                    Kelola kredit transfer Anda (MBKM, Pertukaran, Lomba) di sini.
                     <br className="hidden sm:block" />
-                    These are <span className="font-semibold text-gray-700">separate</span> from your regular course credits.
+                    Ini <span className="font-semibold text-gray-700">terpisah</span> dari kredit mata kuliah reguler Anda.
                 </p>
             </header>
 
@@ -137,7 +137,7 @@ export default function CreditTransferPage() {
                         <ArrowRightLeft className="w-7 h-7" />
                     </div>
                     <div>
-                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Total Transfer Credits</h2>
+                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Total SKS Transfer</h2>
                         <div className="flex items-baseline gap-2">
                             <span className="text-4xl font-extrabold text-gray-900">{totalCredits}</span>
                             <span className="text-lg font-medium text-gray-500">SKS</span>
@@ -149,9 +149,9 @@ export default function CreditTransferPage() {
                     <div className="flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-[#5AA0FF] shrink-0 mt-0.5" />
                         <div>
-                            <p className="text-sm text-gray-800 font-semibold mb-1">Important Reminder</p>
+                            <p className="text-sm text-gray-800 font-semibold mb-1">Penting</p>
                             <p className="text-sm text-gray-600 leading-snug">
-                                Transfer credits allow you to fulfill external requirements but do not replace mandatory core courses unless specified.
+                                Kredit transfer memungkinkan Anda memenuhi persyaratan eksternal tetapi tidak menggantikan mata kuliah inti wajib kecuali ditentukan lain.
                             </p>
                         </div>
                     </div>
@@ -172,12 +172,12 @@ export default function CreditTransferPage() {
                                 {isEditMode ? (
                                     <>
                                         <Edit2 className="w-5 h-5 mr-2" />
-                                        Edit Transfer
+                                        Ubah Transfer
                                     </>
                                 ) : (
                                     <>
                                         <Plus className="w-5 h-5 mr-2 text-[#5AA0FF]" />
-                                        Add Transfer
+                                        Tambah Transfer
                                     </>
                                 )}
                             </h3>
@@ -186,7 +186,7 @@ export default function CreditTransferPage() {
                                     onClick={handleCancelEdit}
                                     className="text-xs font-semibold text-gray-500 hover:text-gray-800 underline"
                                 >
-                                    Cancel
+                                    Batal
                                 </button>
                             )}
                         </div>
@@ -195,7 +195,7 @@ export default function CreditTransferPage() {
                             {/* Readonly Field */}
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                                    Student NPM
+                                    NPM Mahasiswa
                                 </label>
                                 <input
                                     type="text"
@@ -208,7 +208,7 @@ export default function CreditTransferPage() {
                             {/* Credits Input */}
                             <div>
                                 <label htmlFor="credits" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                                    Transfer Credits (SKS)
+                                    SKS Transfer
                                 </label>
                                 <input
                                     id="credits"
@@ -216,7 +216,7 @@ export default function CreditTransferPage() {
                                     name="credits"
                                     value={formData.credits}
                                     onChange={handleInputChange}
-                                    placeholder="e.g. 3"
+                                    placeholder="cth. 3"
                                     min="1"
                                     max="24"
                                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5AA0FF]/30 focus:border-[#5AA0FF] transition-all"
@@ -227,7 +227,7 @@ export default function CreditTransferPage() {
                             {/* Category Select */}
                             <div>
                                 <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                                    Category
+                                    Kategori
                                 </label>
                                 <div className="relative">
                                     <select
@@ -250,7 +250,7 @@ export default function CreditTransferPage() {
                             {/* Description Input */}
                             <div>
                                 <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                                    Description / Event Name
+                                    Deskripsi / Nama Kegiatan
                                 </label>
                                 <input
                                     id="description"
@@ -258,7 +258,7 @@ export default function CreditTransferPage() {
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
-                                    placeholder="e.g. GEMASTIK 2025 Winner"
+                                    placeholder="cth. Juara GEMASTIK 2025"
                                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5AA0FF]/30 focus:border-[#5AA0FF] transition-all"
                                     required
                                 />
@@ -274,7 +274,7 @@ export default function CreditTransferPage() {
                                         : 'bg-[#5AA0FF] hover:bg-blue-600 text-white shadow-blue-200'}
                                 `}
                             >
-                                {isEditMode ? 'Update Transfer' : 'Add to List'}
+                                {isEditMode ? 'Perbarui Transfer' : 'Tambahkan ke Daftar'}
                             </button>
                         </form>
                     </div>
@@ -287,7 +287,7 @@ export default function CreditTransferPage() {
 
                         {/* Table Toolbar */}
                         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50">
-                            <h3 className="text-lg font-bold text-gray-900">History List</h3>
+                            <h3 className="text-lg font-bold text-gray-900">Daftar Riwayat</h3>
 
                             <div className="relative w-full sm:w-64">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -295,7 +295,7 @@ export default function CreditTransferPage() {
                                     type="text"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    placeholder="Search history..."
+                                    placeholder="Cari riwayat..."
                                     className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AA0FF] focus:ring-1 focus:ring-[#5AA0FF]"
                                 />
                             </div>
@@ -306,18 +306,18 @@ export default function CreditTransferPage() {
                             <table className="w-full text-left border-collapse">
                                 <thead className="bg-gray-50 text-gray-500 text-xs font-semibold uppercase tracking-wider border-b border-gray-200">
                                     <tr>
-                                        <th className="px-6 py-4 whitespace-nowrap w-32">Date</th>
-                                        <th className="px-6 py-4 whitespace-nowrap w-40">Category</th>
-                                        <th className="px-6 py-4">Description</th>
-                                        <th className="px-6 py-4 text-right whitespace-nowrap w-24">Credits</th>
-                                        <th className="px-6 py-4 text-center w-24">Action</th>
+                                        <th className="px-6 py-4 whitespace-nowrap w-32">Tanggal</th>
+                                        <th className="px-6 py-4 whitespace-nowrap w-40">Kategori</th>
+                                        <th className="px-6 py-4">Deskripsi</th>
+                                        <th className="px-6 py-4 text-right whitespace-nowrap w-24">SKS</th>
+                                        <th className="px-6 py-4 text-center w-24">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 text-sm">
                                     {filteredTransfers.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-12 text-center text-gray-400 italic">
-                                                {searchTerm ? 'No matches found.' : 'No transfer credits added yet.'}
+                                                {searchTerm ? 'Tidak ada data yang cocok.' : 'Belum ada kredit transfer yang ditambahkan.'}
                                             </td>
                                         </tr>
                                     ) : (
@@ -358,7 +358,7 @@ export default function CreditTransferPage() {
                                                         <button
                                                             onClick={() => handleDeleteClick(item.id)}
                                                             className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-red-100"
-                                                            title="Delete"
+                                                            title="Hapus"
                                                             aria-label="Delete transfer"
                                                         >
                                                             <Trash2 className="w-4 h-4" />
@@ -373,7 +373,7 @@ export default function CreditTransferPage() {
                         </div>
                         {/* Footer / Pagination Placeholder */}
                         <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/30 text-xs text-gray-400 text-right">
-                            Showing {filteredTransfers.length} entries
+                            Menampilkan {filteredTransfers.length} entri
                         </div>
                     </div>
                 </div>
@@ -387,23 +387,23 @@ export default function CreditTransferPage() {
                             <div className="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center shrink-0">
                                 <AlertCircle className="w-6 h-6" />
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900">Delete Item?</h3>
+                            <h3 className="text-lg font-bold text-gray-900">Hapus Item?</h3>
                         </div>
                         <p className="text-gray-600 text-sm mb-6">
-                            Are you sure you want to delete this transfer credit entry? This action cannot be undone.
+                            Apakah Anda yakin ingin menghapus entri kredit transfer ini? Tindakan ini tidak dapat dibatalkan.
                         </p>
                         <div className="flex gap-3 justify-end">
                             <button
                                 onClick={() => setDeleteId(null)}
                                 className="px-4 py-2 rounded-xl text-gray-600 font-medium hover:bg-gray-100 transition-colors text-sm"
                             >
-                                Cancel
+                                Batal
                             </button>
                             <button
                                 onClick={confirmDelete}
                                 className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-200 text-sm"
                             >
-                                Delete
+                                Hapus
                             </button>
                         </div>
                     </div>

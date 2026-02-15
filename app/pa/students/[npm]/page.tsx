@@ -7,28 +7,28 @@ import { STUDENTS_DATA, Student } from '../../data';
 
 // Dummy Course Data
 const COURSES_TAKEN = [
-    { code: 'CSGE601001', name: 'Programming Foundations', credits: 4, grade: 'A', term: 'Term 1 2022/2023' },
-    { code: 'CSGE601002', name: 'Discrete Mathematics 1', credits: 3, grade: 'A-', term: 'Term 1 2022/2023' },
-    { code: 'CSGE601003', name: 'Linear Algebra', credits: 3, grade: 'B+', term: 'Term 1 2022/2023' },
-    { code: 'CSGE602004', name: 'Data Structures & Algo', credits: 4, grade: 'A', term: 'Term 2 2022/2023' },
-    { code: 'CSGE602005', name: 'Computer Architecture', credits: 3, grade: 'B', term: 'Term 2 2022/2023' },
-    { code: 'CSGE602006', name: 'Databases', credits: 4, grade: 'A-', term: 'Term 2 2022/2023' },
-    { code: 'CSGE603007', name: 'Operating Systems', credits: 4, grade: 'B+', term: 'Term 1 2023/2024' },
-    { code: 'CSGE603008', name: 'Computer Networks', credits: 3, grade: 'A', term: 'Term 1 2023/2024' },
+    { code: 'CSGE601001', name: 'Dasar Pemrograman', credits: 4, grade: 'A', term: 'Smt 1 2022/2023' },
+    { code: 'CSGE601002', name: 'Matematika Diskrit 1', credits: 3, grade: 'A-', term: 'Smt 1 2022/2023' },
+    { code: 'CSGE601003', name: 'Aljabar Linear', credits: 3, grade: 'B+', term: 'Smt 1 2022/2023' },
+    { code: 'CSGE602004', name: 'Struktur Data & Algoritma', credits: 4, grade: 'A', term: 'Smt 2 2022/2023' },
+    { code: 'CSGE602005', name: 'Arsitektur Komputer', credits: 3, grade: 'B', term: 'Smt 2 2022/2023' },
+    { code: 'CSGE602006', name: 'Basis Data', credits: 4, grade: 'A-', term: 'Smt 2 2022/2023' },
+    { code: 'CSGE603007', name: 'Sistem Operasi', credits: 4, grade: 'B+', term: 'Smt 1 2023/2024' },
+    { code: 'CSGE603008', name: 'Jaringan Komputer', credits: 3, grade: 'A', term: 'Smt 1 2023/2024' },
 ];
 
 const IRS_HISTORY = [
-    { term: 'Term 1 2023/2024', status: 'Approved', credits: 21, courses: 7 },
-    { term: 'Term 2 2022/2023', status: 'Approved', credits: 19, courses: 6 },
-    { term: 'Term 1 2022/2023', status: 'Approved', credits: 18, courses: 6 },
+    { term: 'Smt 1 2023/2024', status: 'Disetujui', credits: 21, courses: 7 },
+    { term: 'Smt 2 2022/2023', status: 'Disetujui', credits: 19, courses: 6 },
+    { term: 'Smt 1 2022/2023', status: 'Disetujui', credits: 18, courses: 6 },
 ];
 
 const REMAINING_REQUIRED = [
-    { code: 'CSGE604010', name: 'Software Engineering', credits: 4 },
-    { code: 'CSGE604011', name: 'Automata Theory', credits: 3 },
-    { code: 'CSGE605012', name: 'Compiler Design', credits: 3 },
-    { code: 'CSGE606020', name: 'Human Computer Interaction', credits: 3 },
-    { code: 'CSGE607090', name: 'Final Project / Thesis', credits: 6 },
+    { code: 'CSGE604010', name: 'Rekayasa Perangkat Lunak', credits: 4 },
+    { code: 'CSGE604011', name: 'Teori Bahasa & Automata', credits: 3 },
+    { code: 'CSGE605012', name: 'Desain Kompilator', credits: 3 },
+    { code: 'CSGE606020', name: 'Interaksi Manusia Komputer', credits: 3 },
+    { code: 'CSGE607090', name: 'Tugas Akhir / Skripsi', credits: 6 },
 ];
 
 export default function StudentDetailPage({ params }: { params: { npm: string } }) {
@@ -66,14 +66,14 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
-                            Back to Dashboard
+                            Kembali ke Dasbor
                         </Link>
                         <div className="flex space-x-2">
                             <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
-                                Contact Student
+                                Hubungi Mahasiswa
                             </button>
                             <button className="px-4 py-2 bg-[#5AA0FF] text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20">
-                                Academic Evaluation
+                                Evaluasi Akademik
                             </button>
                         </div>
                     </div>
@@ -123,25 +123,25 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 pb-4">
                     <div>
                         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            Academic Evaluation
+                            Evaluasi Akademik
                             {student.isAtRisk ? (
                                 <span className="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-red-200">
-                                    At Risk (Warning)
+                                    Berisiko (Peringatan)
                                 </span>
                             ) : (
                                 <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-emerald-200">
-                                    Safe
+                                    Aman
                                 </span>
                             )}
                         </h2>
                         <p className="text-gray-500 text-sm mt-1">
-                            Evaluation based on academic performance and study progress.
+                            Evaluasi berdasarkan kinerja akademik dan kemajuan studi.
                         </p>
                     </div>
                     {student.maxSksNext && (
                         <div className="mt-4 md:mt-0 bg-blue-50 border border-blue-100 px-5 py-3 rounded-xl text-right">
-                            <div className="text-xs text-blue-500 font-bold uppercase tracking-wider">Max SKS Next Term</div>
-                            <div className="text-2xl font-extrabold text-[#5AA0FF]">{student.maxSksNext} <span className="text-sm font-medium text-blue-400">Credits</span></div>
+                            <div className="text-xs text-blue-500 font-bold uppercase tracking-wider">Batas SKS Semester Depan</div>
+                            <div className="text-2xl font-extrabold text-[#5AA0FF]">{student.maxSksNext} <span className="text-sm font-medium text-blue-400">SKS</span></div>
                         </div>
                     )}
                 </div>
@@ -149,15 +149,15 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-1 space-y-4">
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-500 font-medium">Current IPS</span>
+                            <span className="text-sm text-gray-500 font-medium">IPS Saat Ini</span>
                             <span className="font-mono font-bold text-gray-900">{student.ips ? student.ips.toFixed(2) : '-'}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-500 font-medium">Standard GPA (IPK)</span>
+                            <span className="text-sm text-gray-500 font-medium">IPK Standar</span>
                             <span className="font-mono font-bold text-gray-900">{student.gpa.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-500 font-medium">Total Credits</span>
+                            <span className="text-sm text-gray-500 font-medium">Total SKS</span>
                             <span className="font-mono font-bold text-gray-900">{student.credits}</span>
                         </div>
                     </div>
@@ -169,7 +169,7 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
-                                    Triggered Warning Reasons
+                                    Penyebab Peringatan
                                 </h3>
                                 <ul className="space-y-2">
                                     {student.riskReasons?.map((reason, idx) => (
@@ -180,7 +180,7 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                     ))}
                                 </ul>
                                 <div className="mt-4 text-xs text-red-600 italic">
-                                    Please schedule a counseling session with this student to discuss their study plan.
+                                    Harap jadwalkan sesi konseling dengan mahasiswa ini untuk mendiskusikan rencana studi mereka.
                                 </div>
                             </div>
                         ) : (
@@ -188,8 +188,8 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                 <svg className="w-12 h-12 text-emerald-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <p className="text-emerald-800 font-medium">Academic Performance is Good</p>
-                                <p className="text-emerald-600 text-xs mt-1">Student is on track with no major issues detected.</p>
+                                <p className="text-emerald-800 font-medium">Kinerja Akademik Baik</p>
+                                <p className="text-emerald-600 text-xs mt-1">Mahasiswa berada di jalur yang benar tanpa kendala utama terdeteksi.</p>
                             </div>
                         )}
                     </div>
@@ -204,9 +204,9 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                     {/* 4. Remaining Required Courses (Most Important) */}
                     <div className="bg-white rounded-2xl shadow-sm border border-red-50 overflow-hidden">
                         <div className="px-6 py-4 border-b border-red-50 bg-red-50/30 flex justify-between items-center">
-                            <h2 className="font-bold text-gray-900">Required Not Taken</h2>
+                            <h2 className="font-bold text-gray-900">Wajib Belum Diambil</h2>
                             <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">
-                                {REMAINING_REQUIRED.length} Courses
+                                {REMAINING_REQUIRED.length} Mata Kuliah
                             </span>
                         </div>
 
@@ -224,14 +224,14 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                             ))}
                         </div>
                         <div className="bg-gray-50 px-6 py-3 text-xs text-center text-gray-400 font-medium border-t border-gray-100">
-                            Student must take these to graduate
+                            Mahasiswa wajib mengambil mata kuliah ini untuk lulus
                         </div>
                     </div>
 
                     {/* 3. IRS History */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100">
-                            <h2 className="font-bold text-gray-900">Registration History</h2>
+                            <h2 className="font-bold text-gray-900">Riwayat Registrasi</h2>
                         </div>
                         <div className="p-6 relative">
                             {/* Timeline Line */}
@@ -244,11 +244,11 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                                         <div className="ml-10 w-full">
                                             <h4 className="text-sm font-bold text-gray-900">{irs.term}</h4>
                                             <div className="flex justify-between items-center mt-1 text-xs">
-                                                <span className="text-gray-500">{irs.courses} courses taken</span>
+                                                <span className="text-gray-500">{irs.courses} mata kuliah diambil</span>
                                                 <span className="font-bold text-gray-700">{irs.credits} SKS</span>
                                             </div>
                                             <div className="mt-1 inline-block px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] uppercase font-bold rounded">
-                                                {irs.status}
+                                                {irs.status === 'Approved' ? 'Disetujui' : irs.status}
                                             </div>
                                         </div>
                                     </div>
@@ -262,12 +262,12 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                 <div className="lg:col-span-2">
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden min-h-[500px]">
                         <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-                            <h2 className="font-bold text-lg text-gray-900">Courses Taken</h2>
+                            <h2 className="font-bold text-lg text-gray-900">Mata Kuliah yang Diambil</h2>
                             <div className="flex space-x-2">
                                 {/* Dummy Sort/Filter */}
                                 <select className="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 outline-none">
-                                    <option>Latest First</option>
-                                    <option>Best Grades</option>
+                                    <option>Terbaru</option>
+                                    <option>Nilai Terbaik</option>
                                 </select>
                             </div>
                         </div>
@@ -275,10 +275,10 @@ export default function StudentDetailPage({ params }: { params: { npm: string } 
                         <table className="w-full text-sm text-left text-gray-600">
                             <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
                                 <tr>
-                                    <th className="px-6 py-3 font-semibold">Code / Name</th>
-                                    <th className="px-6 py-3 font-semibold">Term</th>
-                                    <th className="px-6 py-3 font-semibold text-right">Credit</th>
-                                    <th className="px-6 py-3 font-semibold text-right">Grade</th>
+                                    <th className="px-6 py-3 font-semibold">Kode / Nama</th>
+                                    <th className="px-6 py-3 font-semibold">Semester</th>
+                                    <th className="px-6 py-3 font-semibold text-right">SKS</th>
+                                    <th className="px-6 py-3 font-semibold text-right">Nilai</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">

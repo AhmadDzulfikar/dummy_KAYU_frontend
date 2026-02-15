@@ -14,18 +14,18 @@ export default function StudentDashboard() {
 
     // Dummy Data
     const summaryData = [
-        { label: 'Regular Credits', value: '144', sub: 'Course SKS only' },
-        { label: 'Completed', value: '40/40', sub: 'Required Courses' },
-        { label: 'GPA (IPK)', value: '3.28', sub: 'Scale 4.0' },
-        { label: 'Transfer Credits', value: '6', sub: 'Counted separately', highlight: true },
+        { label: 'SKS Reguler', value: '144', sub: 'Hanya SKS Mata Kuliah' },
+        { label: 'Selesai', value: '40/40', sub: 'Mata Kuliah Wajib' },
+        { label: 'IPK', value: '3.28', sub: 'Skala 4.0' },
+        { label: 'SKS Ekstensi/Transfer', value: '6', sub: 'Dihitung terpisah', highlight: true },
     ];
 
     const maxCreditsRules = [
-        { gpa: '> 3.5', credit: 24, label: 'Excellent' },
-        { gpa: '> 3.0 - 3.5', credit: 21, active: true, label: 'Very Good' }, // 3.10 falls here
-        { gpa: '> 2.5 - 3.0', credit: 18, label: 'Good' },
-        { gpa: '> 2.0 - 2.5', credit: 15, label: 'Fair' },
-        { gpa: '≤ 2.0', credit: 12, label: 'Poor' },
+        { gpa: '> 3.5', credit: 24, label: 'Sangat Baik' },
+        { gpa: '> 3.0 - 3.5', credit: 21, active: true, label: 'Sangat Baik' }, // 3.10 falls here
+        { gpa: '> 2.5 - 3.0', credit: 18, label: 'Baik' },
+        { gpa: '> 2.0 - 2.5', credit: 15, label: 'Cukup' },
+        { gpa: '≤ 2.0', credit: 12, label: 'Kurang' },
     ];
 
     const requiredCoursesNotTaken: { code: string; name: string; sks: number }[] = [];
@@ -60,15 +60,15 @@ export default function StudentDashboard() {
                         <Check className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold">You’re eligible for Yudisium</h3>
-                        <p className="text-green-50 text-sm opacity-90">All key requirements are met. You can proceed to submit.</p>
+                        <h3 className="text-lg font-bold">Anda memenuhi syarat untuk Yudisium</h3>
+                        <p className="text-green-50 text-sm opacity-90">Semua persyaratan utama terpenuhi. Anda dapat melanjutkan pengajuan.</p>
                     </div>
                 </div>
                 <Link
                     href="/student/graduation-calculator"
                     className="bg-white text-green-600 px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
                 >
-                    Go to Graduation Calculator
+                    Buka Kalkulator Yudisium
                 </Link>
             </div>
 
@@ -84,12 +84,12 @@ export default function StudentDashboard() {
                         {/* Status Header */}
                         <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900">Academic Evaluation</h2>
-                                <p className="text-xs text-gray-500 mt-0.5">Monitoring your academic safety</p>
+                                <h2 className="text-lg font-bold text-gray-900">Evaluasi Akademik</h2>
+                                <p className="text-xs text-gray-500 mt-0.5">Memantau keamanan akademik Anda</p>
                             </div>
                             <div className="px-3 py-1 bg-green-100 text-green-700 font-bold rounded-full text-xs border border-green-200 flex items-center shadow-sm">
                                 <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
-                                SAFE
+                                AMAN
                             </div>
                         </div>
 
@@ -97,19 +97,19 @@ export default function StudentDashboard() {
                             {/* Key Indicators Grid */}
                             <div className="grid grid-cols-2 gap-4 mb-6">
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Current GPA</span>
+                                    <span className="block text-xs text-gray-500 font-semibold mb-1">IPK Saat Ini</span>
                                     <span className="text-xl font-bold text-gray-900">3.28</span>
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Latest Sem GPA</span>
+                                    <span className="block text-xs text-gray-500 font-semibold mb-1">IPS Terakhir</span>
                                     <span className="text-xl font-bold text-gray-900">3.10</span>
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Total Regular</span>
+                                    <span className="block text-xs text-gray-500 font-semibold mb-1">Total SKS Reguler</span>
                                     <span className="text-xl font-bold text-gray-900">144</span>
                                 </div>
                                 <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
-                                    <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Max Next SKS</span>
+                                    <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Batas SKS YAD</span>
                                     <span className="text-xl font-bold text-[#5AA0FF]">21</span>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@ export default function StudentDashboard() {
                             {/* Rule / Explanation */}
                             <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
                                 <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-600 uppercase tracking-wide">
-                                    Max Credits Determination
+                                    Penentuan Batas SKS
                                 </div>
                                 <table className="w-full text-xs text-left">
                                     <tbody className="divide-y divide-gray-50">
@@ -134,7 +134,7 @@ export default function StudentDashboard() {
                             <p className="mt-4 text-xs text-gray-500 leading-relaxed bg-yellow-50 p-3 rounded-lg border border-yellow-100 flex gap-2">
                                 <AlertCircle className="w-4 h-4 text-yellow-600 shrink-0" />
                                 <span>
-                                    <span className="font-semibold text-yellow-800">Note:</span> Even semesters have a 24-credit milestone check (24, 48, 72...).
+                                    <span className="font-semibold text-yellow-800">Catatan:</span> Semester genap memiliki pemeriksaan pencapaian 24 SKS (24, 48, 72...).
                                 </span>
                             </p>
                         </div>
@@ -149,22 +149,22 @@ export default function StudentDashboard() {
                         <div className="p-6 border-b border-gray-100">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                                 <div>
-                                    <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Course Tracking</h2>
-                                    <p className="text-sm text-gray-500 mt-1">Manage your study plan efficiently.</p>
+                                    <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Pelacakan Mata Kuliah</h2>
+                                    <p className="text-sm text-gray-500 mt-1">Kelola rencana studi Anda dengan efisien.</p>
                                 </div>
                                 <div className="bg-gray-100 p-1 rounded-xl inline-flex shadow-inner">
                                     <button
                                         onClick={() => setActiveTab('required')}
                                         className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'required' ? 'bg-white shadow-sm text-[#5AA0FF] ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-700'}`}
                                     >
-                                        Required Not Taken
+                                        Wajib Belum Diambil
                                         <span className="ml-2 bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold">0</span>
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('taken')}
                                         className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'taken' ? 'bg-white shadow-sm text-[#5AA0FF] ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-700'}`}
                                     >
-                                        Already Taken
+                                        Sudah Diambil
                                     </button>
                                 </div>
                             </div>
@@ -174,7 +174,7 @@ export default function StudentDashboard() {
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <input
                                     type="text"
-                                    placeholder="Search course name or code..."
+                                    placeholder="Cari nama atau kode mata kuliah..."
                                     className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5AA0FF]/20 focus:border-[#5AA0FF] transition-all"
                                 />
                             </div>
@@ -205,15 +205,15 @@ export default function StudentDashboard() {
                                             <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-4">
                                                 <CheckCircle className="w-8 h-8" />
                                             </div>
-                                            <h3 className="text-gray-900 font-bold text-lg">All required courses completed!</h3>
-                                            <p className="text-gray-500 text-sm max-w-xs mt-1">You have fulfilled the mandatory coursework requirements.</p>
+                                            <h3 className="text-gray-900 font-bold text-lg">Semua mata kuliah wajib selesai!</h3>
+                                            <p className="text-gray-500 text-sm max-w-xs mt-1">Anda telah memenuhi persyaratan mata kuliah wajib.</p>
                                         </div>
                                     )}
 
                                     <div className="mt-8 pt-8 border-t border-dashed border-gray-200 text-center">
-                                        <p className="text-sm text-gray-500">Need to check External Credits?</p>
+                                        <p className="text-sm text-gray-500">Perlu memeriksa SKS Eksternal?</p>
                                         <Link href="/student/credit-transfer" className="text-sm font-bold text-[#5AA0FF] hover:underline mt-1 inline-block">
-                                            Go to Credit Transfer List
+                                            Buka Daftar Transfer Kredit
                                         </Link>
                                     </div>
                                 </div>
@@ -225,8 +225,8 @@ export default function StudentDashboard() {
                                                 <CheckCircle className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <p className="text-sm font-bold text-gray-800">You're doing great!</p>
-                                                <p className="text-xs text-gray-500">24 Required credits completed.</p>
+                                                <p className="text-sm font-bold text-gray-800">Kinerja Anda bagus!</p>
+                                                <p className="text-xs text-gray-500">24 SKS Wajib selesai.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +243,7 @@ export default function StudentDashboard() {
                                             </div>
                                             <div className="flex flex-col items-end">
                                                 <div className="flex items-center gap-1.5 bg-green-50 px-2.5 py-1 rounded-lg border border-green-100">
-                                                    <span className="text-xs text-green-600 font-semibold">Grade</span>
+                                                    <span className="text-xs text-green-600 font-semibold">Nilai</span>
                                                     <span className="text-sm font-extrabold text-green-700">{course.grade}</span>
                                                 </div>
                                             </div>

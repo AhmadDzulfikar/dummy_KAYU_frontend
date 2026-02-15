@@ -94,7 +94,7 @@ export default function StudentDetailPage() {
                         href={`/yudisium/submissions/${relatedSubmissionId}`}
                         className="flex items-center text-sm font-medium text-[#5AA0FF] bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 transition-colors"
                     >
-                        View Related Submission
+                        Lihat Pengajuan Terkait
                         <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                     </Link>
                 )}
@@ -104,17 +104,17 @@ export default function StudentDetailPage() {
                 {/* Transcript */}
                 <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                        <h2 className="font-bold text-gray-900">Academic Transcript (Partial)</h2>
-                        <span className="text-xs text-gray-500">Read-only view</span>
+                        <h2 className="font-bold text-gray-900">Transkrip Akademik (Parsial)</h2>
+                        <span className="text-xs text-gray-500">Tampilan hanya baca</span>
                     </div>
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-white">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Term</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Code</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Course Name</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Credits</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Grade</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Semester</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kode</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Mata Kuliah</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">SKS</th>
+                                <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Nilai</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -127,7 +127,7 @@ export default function StudentDetailPage() {
                                     <tr key={i} className={style}>
                                         <td className="px-6 py-3 text-sm text-gray-500">{row.term}</td>
                                         <td className="px-6 py-3 text-sm text-gray-500 font-mono">{row.code}</td>
-                                        <td className="px-6 py-3 text-sm text-gray-900 font-medium">{row.name} {isRetake && <span className="ml-2 text-xs text-amber-600 font-semibold">(Attempt)</span>}</td>
+                                        <td className="px-6 py-3 text-sm text-gray-900 font-medium">{row.name} {isRetake && <span className="ml-2 text-xs text-amber-600 font-semibold">(Percobaan)</span>}</td>
                                         <td className="px-6 py-3 text-sm text-gray-900 text-right">{row.credits}</td>
                                         <td className="px-6 py-3 text-sm text-gray-900 text-center font-bold">{row.grade}</td>
                                     </tr>
@@ -136,25 +136,25 @@ export default function StudentDetailPage() {
                         </tbody>
                     </table>
                     <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center text-sm text-gray-500 italic">
-                        ... {student.totalCredits - 28} more credits ...
+                        ... {student.totalCredits - 28} SKS lain ...
                     </div>
                 </div>
 
                 {/* Requirements Summary */}
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-24">
-                        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Graduation Summary</h2>
+                        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Ringkasan Kelayakan</h2>
                         <div className="space-y-6">
                             {/* GPA */}
                             <div>
-                                <span className="text-sm font-medium text-gray-700 block mb-1">Current GPA</span>
+                                <span className="text-sm font-medium text-gray-700 block mb-1">IPK Saat Ini</span>
                                 <div className="text-3xl font-bold text-gray-900">{student.gpa.toFixed(2)}</div>
                             </div>
 
                             {/* Regular Credits */}
                             <div>
                                 <div className="flex justify-between mb-1">
-                                    <span className="text-sm font-medium text-gray-700">Total Credits</span>
+                                    <span className="text-sm font-medium text-gray-700">Total SKS</span>
                                     <span className="text-sm font-medium text-gray-900">{student.totalCredits} / 144</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -163,19 +163,19 @@ export default function StudentDetailPage() {
                             </div>
 
                             <div className="pt-4 border-t border-gray-100">
-                                <h3 className="text-sm font-semibold text-gray-900 mb-2">Checklist</h3>
+                                <h3 className="text-sm font-semibold text-gray-900 mb-2">Daftar Periksa</h3>
                                 <div className="space-y-2">
                                     <div className="flex items-center text-sm">
                                         <svg className={`w-5 h-5 mr-2 ${student.gpa >= 2.0 ? 'text-green-500' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={student.gpa >= 2.0 ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"} /></svg>
-                                        <span className={student.gpa >= 2.0 ? 'text-gray-700' : 'text-gray-400'}>Min GPA 2.00</span>
+                                        <span className={student.gpa >= 2.0 ? 'text-gray-700' : 'text-gray-400'}>Min IPK 2.00</span>
                                     </div>
                                     <div className="flex items-center text-sm">
                                         <svg className={`w-5 h-5 mr-2 ${student.totalCredits >= 144 ? 'text-green-500' : 'text-gray-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={student.totalCredits >= 144 ? "M5 13l4 4L19 7" : "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"} /></svg>
-                                        <span className={student.totalCredits >= 144 ? 'text-gray-700' : 'text-gray-400'}>Min Credits 144</span>
+                                        <span className={student.totalCredits >= 144 ? 'text-gray-700' : 'text-gray-400'}>Min SKS 144</span>
                                     </div>
                                     <div className="flex items-center text-sm">
                                         <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                        <span className="text-gray-700">Tuition Paid</span>
+                                        <span className="text-gray-700">SPP Terbayar Lunas</span>
                                     </div>
                                 </div>
                             </div>

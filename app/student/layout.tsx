@@ -20,20 +20,20 @@ export default function StudentLayout({
     // Note: 'dashboard' is the default for eligible, so we check exclusions.
 
     // Config
-    const evaluationStatus = isWarning ? 'WARNING' : 'SAFE';
+    const evaluationStatus = isWarning ? 'BERISIKO' : 'AMAN';
     const evaluationColor = isWarning ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700';
 
-    const yudisiumStatus = isEligible ? 'Eligible' : 'Not eligible';
+    const yudisiumStatus = isEligible ? 'Memenuhi Syarat' : 'Belum Memenuhi Syarat';
     const yudisiumColor = isEligible ? 'text-green-600 font-medium' : 'text-gray-500';
 
     // Notifications
     const notifications = isWarning ? [
-        { title: 'Academic Warning Status', desc: 'You are in Academic Warning status. Please meet your advisor.', time: '1 hour ago', unread: true },
-        { title: 'IPS Below Threshold', desc: 'IPS below threshold detected (2.10).', time: '2 hours ago', unread: true },
-        { title: 'Credit Deficiency', desc: 'Odd semester passed credits below 11 SKS.', time: '5 hours ago', unread: false },
+        { title: 'Status Peringatan Akademik', desc: 'Anda dalam status Peringatan Akademik. Silakan temui PA Anda.', time: '1 jam yang lalu', unread: true },
+        { title: 'IPS Di Bawah Batas', desc: 'IPS terdeteksi di bawah batas (2.10).', time: '2 jam yang lalu', unread: true },
+        { title: 'Kekurangan SKS', desc: 'SKS lulus semester ganjil di bawah 11 SKS.', time: '5 jam yang lalu', unread: false },
     ] : [
-        { title: 'Academic Schedule Update', desc: 'IRS filling period for Even Semester 2025/2026 has been extended.', time: '2 hours ago', unread: true },
-        { title: 'System Maintenance', desc: 'Scheduled maintenance on Sunday 02:00 AM.', time: '1 day ago', unread: false },
+        { title: 'Pembaruan Jadwal Akademik', desc: 'Periode pengisian IRS Semester Genap 2025/2026 telah diperpanjang.', time: '2 jam yang lalu', unread: true },
+        { title: 'Pemeliharaan Sistem', desc: 'Pemeliharaan terjadwal pada hari Minggu 02:00.', time: '1 hari yang lalu', unread: false },
     ];
 
     return (
@@ -58,12 +58,12 @@ export default function StudentLayout({
                             </button>
 
                             <div>
-                                <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Student Dashboard</h1>
+                                <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Dasbor Mahasiswa</h1>
                                 <div className="flex items-center text-xs md:text-sm text-gray-500 mt-0.5 space-x-2">
-                                    <span className="font-medium text-gray-600">Term {isWarning ? '4' : '3'}</span>
+                                    <span className="font-medium text-gray-600">Semester {isWarning ? '4' : '3'}</span>
                                     <span className="hidden sm:inline text-gray-300">•</span>
                                     <span className="flex items-center">
-                                        Evaluation: <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${evaluationColor}`}>{evaluationStatus}</span>
+                                        Evaluasi: <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${evaluationColor}`}>{evaluationStatus}</span>
                                     </span>
                                     <span className="hidden sm:inline text-gray-300">•</span>
                                     <span className={`hidden sm:inline ${yudisiumColor}`}>Yudisium: {yudisiumStatus}</span>
@@ -86,8 +86,8 @@ export default function StudentLayout({
                                 {notificationsOpen && (
                                     <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
                                         <div className="px-4 py-2 border-b border-gray-50 flex justify-between items-center">
-                                            <h3 className="font-bold text-sm text-gray-800">Notifications</h3>
-                                            <span className="text-[10px] text-[#5AA0FF] font-medium cursor-pointer hover:underline">Mark read</span>
+                                            <h3 className="font-bold text-sm text-gray-800">Notifikasi</h3>
+                                            <span className="text-[10px] text-[#5AA0FF] font-medium cursor-pointer hover:underline">Tandai dibaca</span>
                                         </div>
                                         <div className="max-h-[300px] overflow-y-auto">
                                             {notifications.map((n, i) => (
@@ -100,7 +100,7 @@ export default function StudentLayout({
                                             ))}
                                         </div>
                                         <div className="px-4 py-2 border-t border-gray-50 text-center">
-                                            <button className="text-xs text-gray-500 hover:text-[#5AA0FF] font-medium transition-colors">View all</button>
+                                            <button className="text-xs text-gray-500 hover:text-[#5AA0FF] font-medium transition-colors">Lihat semua</button>
                                         </div>
                                     </div>
                                 )}

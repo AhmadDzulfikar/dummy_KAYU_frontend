@@ -64,9 +64,9 @@ export default function PAEvaluation() {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Academic Evaluation</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">Evaluasi Akademik</h1>
                     <p className="text-gray-500 text-sm mt-1">
-                        Monitor advisees flagged as <span className="font-bold text-red-500">At Risk</span> based on academic performance.
+                        Pantau mahasiswa bimbingan yang ditandai <span className="font-bold text-red-500">Berisiko</span> berdasarkan kinerja akademik.
                     </p>
                 </div>
 
@@ -84,7 +84,7 @@ export default function PAEvaluation() {
                                     }
                 `}
                             >
-                                {prog}
+                                {prog === 'Computer Science' ? 'Ilmu Komputer' : (prog === 'Information Systems' ? 'Sistem Informasi' : prog)}
                             </button>
                         ))}
                     </div>
@@ -108,7 +108,7 @@ export default function PAEvaluation() {
                             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
-                            At Risk (Warning)
+                            Berisiko (Peringatan)
                             <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'AtRisk' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-900'}`}>
                                 {STUDENTS_DATA.filter(s => s.program === activeProgram && s.isAtRisk).length}
                             </span>
@@ -122,7 +122,7 @@ export default function PAEvaluation() {
                                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
                         >
-                            All Advisees
+                            Semua Mahasiswa
                         </button>
                     </nav>
                 </div>
@@ -136,7 +136,7 @@ export default function PAEvaluation() {
                             onChange={(e) => setBatchFilter(e.target.value)}
                             className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
                         >
-                            <option value="All">All Batches</option>
+                            <option value="All">Semua Angkatan</option>
                             <option value="2022">2022</option>
                             <option value="2023">2023</option>
                             <option value="2024">2024</option>
@@ -155,7 +155,7 @@ export default function PAEvaluation() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="block w-full p-2.5 pl-10 text-sm text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-[#5AA0FF] focus:border-[#5AA0FF] outline-none"
-                            placeholder="Search by Name or NPM..."
+                            placeholder="Cari berdasarkan Nama atau NPM..."
                         />
                     </div>
                 </div>
@@ -167,15 +167,15 @@ export default function PAEvaluation() {
                     <table className="w-full text-sm text-left text-gray-600">
                         <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
                             <tr>
-                                <th scope="col" className="px-6 py-4 font-semibold">Student Name</th>
+                                <th scope="col" className="px-6 py-4 font-semibold">Nama Mahasiswa</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">NPM</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-center">Batch</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-center">Angkatan</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-right">IPS</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-right">IPK</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">SKS Total</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right text-blue-600">Max SKS Next</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">Total SKS</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-right text-blue-600">Batas SKS</th>
                                 {activeTab === 'AtRisk' && (
-                                    <th scope="col" className="px-6 py-4 font-semibold w-1/4">Warning Reasons</th>
+                                    <th scope="col" className="px-6 py-4 font-semibold w-1/4">Penyebab Peringatan</th>
                                 )}
                             </tr>
                         </thead>
@@ -210,7 +210,7 @@ export default function PAEvaluation() {
                                                     ))}
                                                     {student.riskReasons && student.riskReasons.length > 2 && (
                                                         <span className="text-xs text-gray-400 italic pl-1">
-                                                            +{student.riskReasons.length - 2} more...
+                                                            +{student.riskReasons.length - 2} lainnya...
                                                         </span>
                                                     )}
                                                 </div>
@@ -228,19 +228,19 @@ export default function PAEvaluation() {
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
                                                 </div>
-                                                <h3 className="text-lg font-bold text-gray-900">All Students are Safe</h3>
+                                                <h3 className="text-lg font-bold text-gray-900">Semua Mahasiswa Aman</h3>
                                                 <p className="text-gray-500 text-sm mt-1 max-w-sm">
-                                                    No advisees are currently flagged as At Risk. Great job!
+                                                    Tidak ada mahasiswa bimbingan yang saat ini ditandai Berisiko. Kerja bagus!
                                                 </p>
                                                 <button
                                                     onClick={() => setActiveTab('All')}
                                                     className="mt-4 text-[#5AA0FF] text-sm font-semibold hover:underline"
                                                 >
-                                                    View All Advisees
+                                                    Lihat Semua Mahasiswa
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="text-gray-500 italic">No students found matching your filters.</div>
+                                            <div className="text-gray-500 italic">Data tidak ditemukan.</div>
                                         )}
                                     </td>
                                 </tr>

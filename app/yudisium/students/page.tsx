@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { STUDENTS } from '@/app/yudisium/data';
 import { getStoredSubmissionByNpm } from '@/app/yudisium/storage';
 import { useRouter } from 'next/navigation';
+import { STATUS_LABELS } from '@/app/dictionaries';
 
 type SortField = 'program' | 'batch' | null;
 type SortDirection = 'asc' | 'desc';
@@ -89,7 +90,7 @@ export default function StudentsListPage() {
         if (!mounted) return <span className="bg-gray-100 text-transparent rounded-full px-2 py-0.5 animate-pulse">...</span>;
 
         const sub = getStoredSubmissionByNpm(npm);
-        if (!sub) return <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">Not Submitted</span>;
+        if (!sub) return <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">Belum Diajukan</span>;
 
         let color = 'bg-gray-100 text-gray-700';
         switch (sub.status) {
@@ -97,14 +98,14 @@ export default function StudentsListPage() {
             case 'Approved': color = 'bg-green-100 text-green-800'; break;
             case 'Rejected': color = 'bg-red-100 text-red-800'; break;
         }
-        return <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${color}`}>{sub.status}</span>;
+        return <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${color}`}>{STATUS_LABELS[sub.status] || sub.status}</span>;
     };
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Students</h1>
-                <p className="text-sm text-gray-500 mt-1">Manage and view student academic data for yudisium verification.</p>
+                <h1 className="text-2xl font-bold text-gray-900">Mahasiswa</h1>
+                <p className="text-sm text-gray-500 mt-1">Kelola dan lihat data akademik mahasiswa untuk verifikasi yudisium.</p>
             </div>
 
             {/* Controls */}
@@ -118,10 +119,14 @@ export default function StudentsListPage() {
                     <input
                         type="text"
                         className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 border shadow-sm"
-                        placeholder="Search students..."
+                        placeholder="Cari mahasiswa, NPM, atau prodi..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                </div>
+                {/* Total count */}
+                <div className="text-sm text-gray-500">
+                    Total: {sorted.length} mahasiswa
                 </div>
             </div>
 
@@ -131,7 +136,7 @@ export default function StudentsListPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">NPM</th>
                                 {/* Split Program and Batch */}
                                 <th
@@ -139,19 +144,19 @@ export default function StudentsListPage() {
                                     className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     onClick={() => handleSort('program')}
                                 >
-                                    Program {getSortIcon('program')}
+                                    Prodi {getSortIcon('program')}
                                 </th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     onClick={() => handleSort('batch')}
                                 >
-                                    Batch {getSortIcon('batch')}
+                                    Angkatan {getSortIcon('batch')}
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Academic Status</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">GPA</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Credits</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Yudisium Status</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status Akademik</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">IPK</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">SKS</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status Yudisium</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -182,7 +187,7 @@ export default function StudentsListPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">No data found.</td>
+                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">Data tidak ditemukan.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -192,13 +197,13 @@ export default function StudentsListPage() {
                 {totalPages > 1 && (
                     <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                         <div className="flex-1 flex justify-between sm:hidden">
-                            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Previous</button>
-                            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Next</button>
+                            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Sebelumnya</button>
+                            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Berikutnya</button>
                         </div>
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> of <span className="font-medium">{sorted.length}</span> results
+                                    Menampilkan <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> sampai <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> dari <span className="font-medium">{sorted.length}</span> hasil
                                 </p>
                             </div>
                             <div>

@@ -44,9 +44,9 @@ export default function GraduationCalculatorPage() {
 
             {/* Header */}
             <header className="text-center space-y-3 pt-6">
-                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Graduation Calculator</h1>
+                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Kalkulator Yudisium</h1>
                 <p className="text-gray-500 max-w-2xl mx-auto text-base">
-                    Check eligibility and submit yudisium.
+                    Periksa kelayakan dan ajukan yudisium.
                 </p>
             </header>
 
@@ -58,12 +58,12 @@ export default function GraduationCalculatorPage() {
                             <CheckCircle className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-blue-900 text-lg">Submission Received</h3>
-                            <p className="text-blue-700/80 text-sm">Your yudisium request is pending review by the academic office.</p>
+                            <h3 className="font-bold text-blue-900 text-lg">Pengajuan Diterima</h3>
+                            <p className="text-blue-700/80 text-sm">Permintaan yudisium Anda sedang menunggu peninjauan oleh kantor akademik.</p>
                         </div>
                     </div>
                     <span className="px-4 py-1.5 bg-blue-200 text-blue-800 text-xs font-bold rounded-full uppercase tracking-wide">
-                        Pending Review
+                        Menunggu Peninjauan
                     </span>
                 </div>
             )}
@@ -72,17 +72,17 @@ export default function GraduationCalculatorPage() {
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 {/* Card Header with Status */}
                 <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <h2 className="text-xl font-bold text-gray-900">Eligibility Check</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Periksa Kelayakan</h2>
 
                     {!isEligible ? (
                         <div className="px-4 py-2 bg-yellow-100 text-yellow-700 font-bold rounded-full text-sm border border-yellow-200 flex items-center shadow-sm">
                             <AlertCircle className="w-4 h-4 mr-2" />
-                            Not yet eligible
+                            Belum Memenuhi Syarat
                         </div>
                     ) : (
                         <div className="px-4 py-2 bg-green-100 text-green-700 font-bold rounded-full text-sm border border-green-200 flex items-center shadow-sm">
                             <CheckCircle className="w-4 h-4 mr-2" />
-                            Eligible
+                            Memenuhi Syarat
                         </div>
                     )}
                 </div>
@@ -95,8 +95,8 @@ export default function GraduationCalculatorPage() {
                         <div className="space-y-2">
                             <div className="flex justify-between items-end">
                                 <div>
-                                    <h4 className="font-bold text-gray-800 text-sm">Regular Course Credits</h4>
-                                    <p className="text-xs text-xs text-gray-400">Excludes transfer credits</p>
+                                    <h4 className="font-bold text-gray-800 text-sm">SKS Reguler</h4>
+                                    <p className="text-xs text-xs text-gray-400">Tidak termasuk SKS transfer</p>
                                 </div>
                                 <div className="text-right">
                                     <span className={`text-xl font-bold ${requirements.regularCredits.met ? 'text-green-600' : 'text-yellow-600'}`}>
@@ -116,7 +116,7 @@ export default function GraduationCalculatorPage() {
                         {/* 2. Required Courses */}
                         <div className="space-y-2">
                             <div className="flex justify-between items-end">
-                                <h4 className="font-bold text-gray-800 text-sm">Required Courses Completed</h4>
+                                <h4 className="font-bold text-gray-800 text-sm">Mata Kuliah Wajib Selesai</h4>
                                 <div className="text-right">
                                     <span className={`text-xl font-bold ${requirements.requiredCourses.met ? 'text-green-600' : 'text-yellow-600'}`}>
                                         {requirements.requiredCourses.current}
@@ -135,8 +135,8 @@ export default function GraduationCalculatorPage() {
                         {/* 3. GPA */}
                         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                             <div>
-                                <h4 className="font-bold text-gray-800 text-sm">Minimum GPA Requirement</h4>
-                                <p className="text-xs text-gray-400 mt-0.5">Must be at least {requirements.gpa.min}</p>
+                                <h4 className="font-bold text-gray-800 text-sm">Persyaratan IPK Minimum</h4>
+                                <p className="text-xs text-gray-400 mt-0.5">Harus setidaknya {requirements.gpa.min}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className={`text-lg font-bold ${requirements.gpa.met ? 'text-green-600' : 'text-red-600'}`}>
@@ -157,9 +157,9 @@ export default function GraduationCalculatorPage() {
                             <ArrowRightLeft className="w-4 h-4" />
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-indigo-900">Transfer Credits: {requirements.transferCredits} SKS</h4>
+                            <h4 className="text-sm font-bold text-indigo-900">SKS Transfer: {requirements.transferCredits} SKS</h4>
                             <p className="text-xs text-indigo-700/80 mt-1 leading-relaxed">
-                                These are counted separately from regular course credits. They may be considered during the final manual review but do not automatically fulfill the 144 SKS regular requirement.
+                                Ini dihitung secara terpisah dari SKS reguler. Mereka mungkin dipertimbangkan selama peninjauan manual akhir tetapi tidak secara otomatis memenuhi persyaratan 144 SKS reguler.
                             </p>
                         </div>
                     </div>
@@ -177,10 +177,10 @@ export default function GraduationCalculatorPage() {
                                 }
                             `}
                         >
-                            {submissionStatus === 'pending' ? 'Submission Sent' : 'Submit Yudisium'}
+                            {submissionStatus === 'pending' ? 'Pengajuan Terkirim' : 'Ajukan Yudisium'}
                         </button>
                         <p className="text-center text-xs text-gray-400 mt-3 font-medium">
-                            By submitting, you request a formal review of your academic standing.
+                            Dengan mengajukan, Anda meminta peninjauan formal atas status akademik Anda.
                         </p>
                     </div>
 
@@ -197,12 +197,12 @@ export default function GraduationCalculatorPage() {
                             <AlertCircle className="w-8 h-8" />
                         </div>
 
-                        <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Submit anyway?</h3>
+                        <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Tetap ajukan?</h3>
                         <p className="text-gray-500 text-center text-sm leading-relaxed mb-6">
-                            You are <span className="font-bold text-gray-800">not yet eligible</span>.
-                            Your regular course credits are <span className="font-bold text-red-500">{requirements.regularCredits.current}/{requirements.regularCredits.target}</span> and/or required courses are incomplete.
+                            Anda <span className="font-bold text-gray-800">belum memenuhi syarat</span>.
+                            SKS reguler Anda adalah <span className="font-bold text-red-500">{requirements.regularCredits.current}/{requirements.regularCredits.target}</span> dan/atau mata kuliah wajib belum lengkap.
                             <br /><br />
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Note: Transfer credits do not replace missing regular credits.</span>
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Catatan: SKS Transfer tidak menggantikan SKS reguler yang kurang.</span>
                         </p>
 
                         <div className="flex gap-3">
@@ -210,13 +210,13 @@ export default function GraduationCalculatorPage() {
                                 onClick={() => setModalType('none')}
                                 className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
                             >
-                                Cancel
+                                Batal
                             </button>
                             <button
                                 onClick={confirmSubmitAnyway}
                                 className="flex-1 py-3 rounded-xl bg-[#5AA0FF] text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-100"
                             >
-                                Submit anyway
+                                Tetap ajukan
                             </button>
                         </div>
                     </div>
@@ -231,9 +231,9 @@ export default function GraduationCalculatorPage() {
                             <CheckCircle className="w-8 h-8" />
                         </div>
 
-                        <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Submit yudisium?</h3>
+                        <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Ajukan yudisium?</h3>
                         <p className="text-gray-500 text-center text-sm leading-relaxed mb-6">
-                            All requirements appear met. Continue submission?
+                            Semua persyaratan terpenuhi. Lanjutkan pengajuan?
                         </p>
 
                         <div className="flex gap-3">
@@ -241,13 +241,13 @@ export default function GraduationCalculatorPage() {
                                 onClick={() => setModalType('none')}
                                 className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
                             >
-                                Cancel
+                                Batal
                             </button>
                             <button
                                 onClick={confirmSubmitAnyway}
                                 className="flex-1 py-3 rounded-xl bg-[#5AA0FF] text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-100"
                             >
-                                Submit
+                                Ajukan
                             </button>
                         </div>
                     </div>

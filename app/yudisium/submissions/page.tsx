@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react';
 import { Submission, SubmissionStatus, CompletenessStatus } from '@/app/yudisium/data';
 import { getStoredSubmissions } from '@/app/yudisium/storage';
 import { useRouter } from 'next/navigation';
+import { STATUS_LABELS } from '@/app/dictionaries';
+
+function getStatusLabel(status: SubmissionStatus) {
+    return STATUS_LABELS[status] || status;
+}
 
 type SortField = 'program' | 'batch' | null;
 type SortDirection = 'asc' | 'desc';
@@ -108,8 +113,8 @@ export default function SubmissionsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Yudisium Submissions</h1>
-                <p className="text-sm text-gray-500 mt-1">Review submissions, verify requirements, and decide final graduation status and predicate.</p>
+                <h1 className="text-2xl font-bold text-gray-900">Pengajuan Yudisium</h1>
+                <p className="text-sm text-gray-500 mt-1">Tinjau pengajuan, verifikasi persyaratan, dan tentukan status kelulusan serta predikat.</p>
             </div>
 
             {/* Controls */}
@@ -123,14 +128,14 @@ export default function SubmissionsPage() {
                     <input
                         type="text"
                         className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 border shadow-sm"
-                        placeholder="Search by name, NPM, or program..."
+                        placeholder="Cari berdasarkan nama, NPM, atau prodi..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
                 <div className="text-sm text-gray-500">
-                    Total: {sorted.length} submissions
+                    Total: {sorted.length} pengajuan
                 </div>
             </div>
 
@@ -141,31 +146,31 @@ export default function SubmissionsPage() {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Student Name</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Mahasiswa</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">NPM</th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     onClick={() => handleSort('program')}
                                 >
-                                    Program {getSortIcon('program')}
+                                    Prodi {getSortIcon('program')}
                                 </th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     onClick={() => handleSort('batch')}
                                 >
-                                    Batch {getSortIcon('batch')}
+                                    Angkatan {getSortIcon('batch')}
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Completeness</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kelengkapan</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tanggal</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">Loading data...</td>
+                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">Memuat data...</td>
                                 </tr>
                             ) : displayed.length > 0 ? (
                                 displayed.map((sub, idx) => (
@@ -186,7 +191,7 @@ export default function SubmissionsPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full border ${getCompletenessColor(sub.completeness)}`}>
-                                                {sub.completeness === 'Complete' ? 'Requirements complete' : 'Has issues'}
+                                                {sub.completeness === 'Complete' ? 'Persyaratan lengkap' : 'Ada kendala'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.submittedDate}</td>
@@ -195,7 +200,7 @@ export default function SubmissionsPage() {
                             ) : (
                                 <tr>
                                     <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
-                                        No data found.
+                                        Data tidak ditemukan.
                                     </td>
                                 </tr>
                             )}
@@ -206,13 +211,13 @@ export default function SubmissionsPage() {
                 {totalPages > 1 && (
                     <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                         <div className="flex-1 flex justify-between sm:hidden">
-                            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Previous</button>
-                            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Next</button>
+                            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Sebelumnya</button>
+                            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">Berikutnya</button>
                         </div>
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> of <span className="font-medium">{sorted.length}</span> results
+                                    Menampilkan <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> sampai <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> dari <span className="font-medium">{sorted.length}</span> hasil
                                 </p>
                             </div>
                             <div>

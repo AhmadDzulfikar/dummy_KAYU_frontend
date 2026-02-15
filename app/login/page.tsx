@@ -22,7 +22,7 @@ export default function LoginPage() {
       // Dummy Account Checks
 
       // 1. Define Dummy Database
-      const accounts: Record<string, { pass: string, roles: string[], programs?: string[] }> = {
+      const accounts: Record<string, { pass: string, roles: string[], programs?: string[], kaprodiRole?: 'single' | 'multi' }> = {
         // Students
         'AmanSatu': { pass: 'BelumEligible', roles: ['Student-NotEligible'] },
         'AmanDua': { pass: 'Eligible', roles: ['Student-Eligible'] },
@@ -33,7 +33,21 @@ export default function LoginPage() {
         'TimYudisium': { pass: 'TimYudisium', roles: ['Yudisium Team'] },
         'ManajerAkademik': { pass: 'ManajerAkademik', roles: ['Academic Manager'] },
         'Sekretariat': { pass: 'Sekretariat', roles: ['Secretariat'] },
-        'Kaprodi': { pass: 'Kaprodi', roles: ['Head of Program'] },
+        'Kaprodi': { pass: 'Kaprodi', roles: ['Head of Program'], kaprodiRole: 'multi' }, // Legacy/Default
+
+        // Kaprodi Scenarios
+        'Kaprodi_SingleProdi': {
+          pass: 'Kaprodi_SingleProdi',
+          roles: ['Head of Program'],
+          programs: ['Computer Science'],
+          kaprodiRole: 'single'
+        },
+        'Kaprodi_MultiProdi': {
+          pass: 'Kaprodi_MultiProdi',
+          roles: ['Head of Program'],
+          programs: ['Computer Science', 'Information Systems', 'Artificial Intelligence'],
+          kaprodiRole: 'multi'
+        },
 
         // Multi-Role
         'MultiRole': { pass: 'MultiRole', roles: ['Academic Advisor', 'Yudisium Team'], programs: ['Computer Science'] },
@@ -57,7 +71,7 @@ export default function LoginPage() {
         'Yudisium Team': '/yudisium/submissions',
         'Academic Manager': '/academic-manager/dashboard',
         'Secretariat': '/secretariat/dashboard',
-        'Head of Program': '/kaprodi/dashboard'
+        'Head of Program': '/kaprodi/dasbor' // Default, logic below overrides this
       };
 
       const user = accounts[username];
@@ -69,6 +83,10 @@ export default function LoginPage() {
         localStorage.removeItem('lastUsedRole');
         localStorage.removeItem('userPrograms');
         localStorage.removeItem('activeProgram');
+
+        // Clear Kaprodi specific
+        localStorage.removeItem('kaprodiRole');
+        localStorage.removeItem('kaprodiActiveProdi');
 
         // 2. Handle Students Specials
         if (user.roles[0].startsWith('Student')) {
@@ -83,6 +101,22 @@ export default function LoginPage() {
         localStorage.setItem('userRoles', JSON.stringify(user.roles));
         if (user.programs) {
           localStorage.setItem('userPrograms', JSON.stringify(user.programs));
+        }
+
+        // Special Login Logic for Head of Program (Kaprodi)
+        if (user.roles.includes('Head of Program')) {
+          if (user.kaprodiRole === 'single') {
+            localStorage.setItem('kaprodiRole', 'single');
+            // Auto-set the single prodi
+            localStorage.setItem('kaprodiActiveProdi', 'Ilmu Komputer');
+            router.push('/kaprodi/dasbor');
+            return;
+          } else {
+            localStorage.setItem('kaprodiRole', 'multi');
+            localStorage.removeItem('kaprodiActiveProdi');
+            router.push('/kaprodi/pilih-prodi');
+            return;
+          }
         }
 
         // Special Login Logic for Academic Advisor
@@ -270,12 +304,10 @@ export default function LoginPage() {
             <div className="mt-8 pt-4 border-t border-dashed border-gray-200 text-center">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-2">Demo Accounts</p>
               <div className="text-xs text-gray-500 space-y-1 font-mono">
-                <div>Students: AmanSatu, AmanDua, WarningSatu (pw matched)</div>
+                <div>Student: AmanSatu (pw matched)</div>
                 <div className="pt-2 font-bold text-gray-400">Staff (pw = username):</div>
-                <div>DosenPA, TimYudisium, ManajerAkademik</div>
-                <div>Sekretariat, Kaprodi, MultiRole</div>
-                <div className="pt-2 font-bold text-gray-400">PA Demo:</div>
-                <div>PA_SingleProdi, PA_MultiProdi</div>
+                <div>DosenPA, Kaprodi_SingleProdi</div>
+                <div>Kaprodi_MultiProdi</div>
               </div>
             </div>
 

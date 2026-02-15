@@ -41,8 +41,8 @@ export default function SelectProgramPage() {
         <div className="flex flex-col items-center justify-center min-h-[60vh] py-12">
             <div className="w-full max-w-2xl text-center space-y-8">
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Select Program</h1>
-                    <p className="text-gray-500 text-lg">Choose a program context to view your advisees.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Pilih Program Studi</h1>
+                    <p className="text-gray-500 text-lg">Pilih konteks program studi untuk melihat data mahasiswa bimbingan Anda.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -73,10 +73,10 @@ export default function SelectProgramPage() {
                             </div>
 
                             <h3 className={`text-lg font-bold ${selected === prog ? 'text-[#5AA0FF]' : 'text-gray-900'}`}>
-                                {prog}
+                                {prog === 'Computer Science' ? 'Ilmu Komputer' : (prog === 'Information Systems' ? 'Sistem Informasi' : prog)}
                             </h3>
                             <p className="text-sm text-gray-500 mt-1">
-                                View students and academic data for {prog}.
+                                Lihat data mahasiswa dan akademik untuk {prog}.
                             </p>
                         </button>
                     ))}
@@ -93,7 +93,7 @@ export default function SelectProgramPage() {
                             }
             `}
                     >
-                        Continue to Dashboard
+                        Lanjut ke Dasbor
                     </button>
                 </div>
             </div>

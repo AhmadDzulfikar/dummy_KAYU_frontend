@@ -31,7 +31,7 @@ export default function YudisiumLayout({ children }: { children: React.ReactNode
                             {/* Fixed the SVG path just in case, looks a bit mangled in previous content but it's fine */}
                             <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
                         </svg>
-                        Submissions
+                        Pengajuan
                     </Link>
 
                     <Link
@@ -44,18 +44,18 @@ export default function YudisiumLayout({ children }: { children: React.ReactNode
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
-                        Students
+                        Mahasiswa
                     </Link>
 
                     <div className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6">
-                        Account
+                        Akun
                     </div>
 
                     <button className="w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        Profile
+                        Profil
                     </button>
 
                     <button
@@ -65,7 +65,7 @@ export default function YudisiumLayout({ children }: { children: React.ReactNode
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                        Logout
+                        Keluar
                     </button>
                 </nav>
             </aside>
@@ -81,8 +81,8 @@ export default function YudisiumLayout({ children }: { children: React.ReactNode
                     <div className="flex items-center space-x-6">
                         <div className="flex items-center space-x-3">
                             <div className="text-right hidden sm:block">
-                                <div className="text-sm font-bold text-gray-900 leading-none">Yudisium Staff</div>
-                                <div className="text-xs text-gray-500 mt-1">Yudisium Team</div>
+                                <div className="text-sm font-bold text-gray-900 leading-none">Staf Yudisium</div>
+                                <div className="text-xs text-gray-500 mt-1">Tim Yudisium</div>
                             </div>
                             <div className="h-9 w-9 bg-gray-100 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm text-[#5AA0FF] bg-blue-50">
                                 YS

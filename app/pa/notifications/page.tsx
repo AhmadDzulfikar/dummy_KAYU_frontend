@@ -8,9 +8,9 @@ const NOTIFICATIONS = [
     {
         id: 1,
         type: 'warning',
-        title: 'Academic Warning Triggered',
-        message: 'Rizky Pratama is now At Risk: IPS < 2.30.',
-        time: '2 hours ago',
+        title: 'Peringatan Akademik Terpicu',
+        message: 'Rizky Pratama sekarang Berisiko: IPS < 2.30.',
+        time: '2 jam yang lalu',
         read: false,
         studentId: '2306089999',
         emailSent: true
@@ -18,18 +18,18 @@ const NOTIFICATIONS = [
     {
         id: 2,
         type: 'info',
-        title: 'IRS Approval Reminder',
-        message: 'Please review pending IRS for 5 students.',
-        time: '5 hours ago',
+        title: 'Pengingat Persetujuan IRS',
+        message: 'Mohon tinjau IRS tertunda untuk 5 mahasiswa.',
+        time: '5 jam yang lalu',
         read: false,
         link: '/pa/dashboard'
     },
     {
         id: 3,
         type: 'warning',
-        title: 'Credits Below Milestone',
-        message: 'Andi Wijaya has fallen behind the credit target for Semester 4.',
-        time: '1 day ago',
+        title: 'SKS Di Bawah Target',
+        message: 'Andi Wijaya tertinggal dari target SKS untuk Semester 4.',
+        time: '1 hari yang lalu',
         read: true,
         studentId: '2206097777',
         emailSent: true
@@ -37,9 +37,9 @@ const NOTIFICATIONS = [
     {
         id: 4,
         type: 'success',
-        title: 'Student Status Updated',
-        message: 'Wayan Adi has successfully requested "Cuti".',
-        time: '2 days ago',
+        title: 'Status Mahasiswa Diperbarui',
+        message: 'Wayan Adi telah berhasil mengajukan "Cuti".',
+        time: '2 hari yang lalu',
         read: true,
         studentId: '2306083456'
     }
@@ -60,14 +60,14 @@ export default function PANotifications() {
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Notifications (jujur masih ngasal wok)</h1>
-                    <p className="text-gray-500 text-sm mt-1">Updates on advisees and academic alerts.</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Notifikasi</h1>
+                    <p className="text-gray-500 text-sm mt-1">Pembaruan tentang mahasiswa bimbingan dan peringatan akademik.</p>
                 </div>
                 <button
                     onClick={markAllRead}
                     className="text-sm font-semibold text-[#5AA0FF] hover:text-blue-600 transition-colors"
                 >
-                    Mark all as read
+                    Tandai semua sudah dibaca
                 </button>
             </div>
 
@@ -111,7 +111,7 @@ export default function PANotifications() {
                                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                             </svg>
-                                            Email Sent
+                                            Email Terkirim
                                         </span>
                                     )}
                                 </h3>
@@ -124,7 +124,7 @@ export default function PANotifications() {
                                     href={`/pa/students/${notif.studentId}`}
                                     className="inline-block mt-2 text-xs font-bold text-[#5AA0FF] hover:underline"
                                 >
-                                    View Student Details
+                                    Lihat Detail Mahasiswa
                                 </Link>
                             )}
                             {notif.link && (
@@ -132,7 +132,7 @@ export default function PANotifications() {
                                     href={notif.link}
                                     className="inline-block mt-2 text-xs font-bold text-[#5AA0FF] hover:underline"
                                 >
-                                    Go to Dashboard
+                                    Buka Dasbor
                                 </Link>
                             )}
                         </div>
@@ -147,7 +147,7 @@ export default function PANotifications() {
 
                 {notifications.length === 0 && (
                     <div className="p-10 text-center text-gray-500 italic">
-                        No notifications.
+                        Tidak ada notifikasi.
                     </div>
                 )}
             </div>
