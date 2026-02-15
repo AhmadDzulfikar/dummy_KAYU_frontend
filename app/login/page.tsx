@@ -54,7 +54,7 @@ export default function LoginPage() {
       // Role -> Path Mapping
       const rolePaths: Record<string, string> = {
         'Academic Advisor': '/pa/dashboard',
-        'Yudisium Team': '/yudisium/dashboard',
+        'Yudisium Team': '/yudisium/submissions',
         'Academic Manager': '/academic-manager/dashboard',
         'Secretariat': '/secretariat/dashboard',
         'Head of Program': '/kaprodi/dashboard'
