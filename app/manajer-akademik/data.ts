@@ -21,7 +21,7 @@ export interface CreditTransfer {
     studentName: string; // Helper for display
     activityName: string;
     credits: number;
-    grade: string;
+    // grade: string; // REMOVED
     category: 'MBKM' | 'Pertukaran' | 'Kompetisi' | 'Sertifikasi' | 'Lainnya';
     date: string;
 }
@@ -40,22 +40,34 @@ const LAST_NAMES = [
 const PROGRAMS = ['Ilmu Komputer', 'Sistem Informasi', 'Kecerdasan Artifisial'] as const;
 
 // Generate Students
+// Generate Students with DETERMINISTIC NPMs
 export const MANAGER_STUDENTS = Array.from({ length: 150 }).map((_, i) => {
-    const program = PROGRAMS[Math.floor(Math.random() * PROGRAMS.length)];
-    const batch = 2020 + Math.floor(Math.random() * 5); // 2020-2024
+    // Deterministic assignment for stable NPMs
+    const programIndex = i % PROGRAMS.length;
+    const program = PROGRAMS[programIndex];
+
+    // Deterministic batch: 2020-2024
+    const batch = 2020 + (i % 5);
 
     // NPM Logic
     const progCode = program === 'Ilmu Komputer' ? '08' : program === 'Sistem Informasi' ? '09' : '10';
-    const npm = `${batch.toString().slice(2)}${progCode}${100000 + i}`;
+    // Use a fixed sequence for the trailing number to ensure uniqueness and stability
+    const uniqueId = 100000 + i;
+    const npm = `${batch.toString().slice(2)}${progCode}${uniqueId}`;
 
-    const name = `${FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`;
+    const name = `${FIRST_NAMES[i % FIRST_NAMES.length]} ${LAST_NAMES[i % LAST_NAMES.length]}`;
 
-    const isCuti = Math.random() < 0.05;
-    const gpa = parseFloat((2.0 + Math.random() * 2.0).toFixed(2));
-    const ips = parseFloat((Math.max(0, gpa - 0.5 + Math.random())).toFixed(2));
+    // Stats can remain partially random for variety, or use modulo for stability if needed.
+    // Making them semi-deterministic based on ID to avoid hydration mismatches if generated on server vs client
+    const isCuti = (i % 20) === 0; // Every 20th student is Cuti
+
+    // Deterministic GPA/IPS logic based on index
+    const baseGpa = 2.0 + ((i * 7) % 200) / 100; // Value between 2.00 and 4.00
+    const gpa = parseFloat(Math.min(4.0, baseGpa).toFixed(2));
+    const ips = parseFloat(Math.max(0, Math.min(4.0, gpa - 0.2 + ((i % 10) / 20))).toFixed(2));
 
     let evalStatus: 'Aman' | 'Peringatan' = 'Aman';
-    const riskReasons = [];
+    const riskReasons: string[] = [];
 
     if (!isCuti) {
         if (ips < 2.30) { evalStatus = 'Peringatan'; riskReasons.push('IPS < 2.30'); }
@@ -66,11 +78,14 @@ export const MANAGER_STUDENTS = Array.from({ length: 150 }).map((_, i) => {
     let yudisiumStatus: 'Belum mengajukan' | 'Diajukan' | 'Disetujui' | 'Ditolak' = 'Belum mengajukan';
     let isEligible = false;
 
-    const credits = Math.floor(Math.random() * 144);
+    const credits = 80 + (i % 65); // 80 to 144
 
     if (credits >= 138 && gpa >= 3.00) {
         isEligible = true;
-        if (Math.random() < 0.6) yudisiumStatus = ['Diajukan', 'Disetujui', 'Ditolak'][Math.floor(Math.random() * 3)] as any;
+        const statusMod = i % 4;
+        if (statusMod === 1) yudisiumStatus = 'Diajukan';
+        if (statusMod === 2) yudisiumStatus = 'Disetujui';
+        if (statusMod === 3) yudisiumStatus = 'Ditolak';
     }
 
     return {
@@ -82,7 +97,7 @@ export const MANAGER_STUDENTS = Array.from({ length: 150 }).map((_, i) => {
         gpa,
         ips,
         credits,
-        transferCredits: Math.floor(Math.random() * 10),
+        transferCredits: (i % 5) * 2,
         evaluationStatus: evalStatus,
         riskReasons: riskReasons.length ? riskReasons : undefined,
         yudisiumStatus,
@@ -94,21 +109,19 @@ export const MANAGER_STUDENTS = Array.from({ length: 150 }).map((_, i) => {
 export const INITIAL_TRANSFERS: CreditTransfer[] = [
     {
         id: 1,
-        npm: '2008100001',
-        studentName: 'Muhammad Pratama',
+        npm: MANAGER_STUDENTS[0].npm,
+        studentName: MANAGER_STUDENTS[0].name,
         activityName: 'Bangkit 2023',
         credits: 20,
-        grade: 'A',
         category: 'MBKM',
         date: '2023-12-15'
     },
     {
         id: 2,
-        npm: '2109100012',
-        studentName: 'Sarah Wibowo',
+        npm: MANAGER_STUDENTS[1].npm,
+        studentName: MANAGER_STUDENTS[1].name,
         activityName: 'IISMA 2023',
         credits: 20,
-        grade: 'A',
         category: 'Pertukaran',
         date: '2024-01-10'
     }

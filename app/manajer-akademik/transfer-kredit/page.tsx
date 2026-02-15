@@ -11,10 +11,12 @@ export default function TransferKreditManager() {
         npm: '',
         activityName: '',
         credits: 0,
-        grade: '',
         category: 'MBKM'
     });
     const [error, setError] = useState<string | null>(null);
+
+    // Filter UI
+    const [filterSearch, setFilterSearch] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,38 +27,36 @@ export default function TransferKreditManager() {
         e.preventDefault();
 
         // Validation
-        if (formData.credits <= 0) {
-            setError("SKS harus lebih besar dari 0.");
+        if (!formData.credits || formData.credits <= 0) {
+            setError("SKS wajib diisi dan harus lebih besar dari 0.");
             return;
         }
-        if (!['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D', 'E'].includes(formData.grade.toUpperCase())) { // Broaden validation
-            setError("Nilai Huruf tidak valid. Gunakan A/B/C/D/E.");
+        if (!formData.npm.trim()) {
+            setError("NPM Mahasiswa wajib diisi.");
             return;
         }
-        if (!formData.npm || !formData.activityName) {
-            setError("Mohon lengkapi semua field.");
+        if (!formData.activityName.trim()) {
+            setError("Nama Kegiatan wajib diisi.");
             return;
         }
 
         const newTransfer: CreditTransfer = {
             id: Date.now(),
             npm: formData.npm,
-            studentName: 'Mahasiswa (Dummy)', // In real app, fetch name
+            studentName: 'Mahasiswa (Dummy)',
             activityName: formData.activityName,
             credits: Number(formData.credits),
-            grade: formData.grade.toUpperCase(),
             category: formData.category as any,
             date: new Date().toISOString().split('T')[0]
         };
 
         setTransfers([newTransfer, ...transfers]);
 
-        // Reset
+        // Reset (removed grade)
         setFormData({
             npm: '',
             activityName: '',
             credits: 0,
-            grade: '',
             category: 'MBKM'
         });
         alert("Berhasil menambahkan transfer kredit ke draft.");
@@ -67,6 +67,13 @@ export default function TransferKreditManager() {
             setTransfers(transfers.filter(t => t.id !== id));
         }
     };
+
+    // Client-side filtering for table
+    const filteredTransfers = transfers.filter(t => {
+        if (!filterSearch) return true;
+        const q = filterSearch.toLowerCase();
+        return t.studentName.toLowerCase().includes(q) || t.npm.includes(q);
+    });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-300">
@@ -122,33 +129,20 @@ export default function TransferKreditManager() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nilai Huruf</label>
-                                    <input
-                                        name="grade"
-                                        type="text"
-                                        placeholder="A/B/C..."
-                                        className="w-full p-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-[#5AA0FF] outline-none text-sm transition-all text-center uppercase"
-                                        maxLength={2}
-                                        value={formData.grade}
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
+                                    <select
+                                        name="category"
+                                        className="w-full p-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-[#5AA0FF] outline-none text-sm transition-all"
+                                        value={formData.category}
                                         onChange={handleInputChange}
-                                    />
+                                    >
+                                        <option value="MBKM">MBKM</option>
+                                        <option value="Pertukaran">Pertukaran</option>
+                                        <option value="Kompetisi">Kompetisi</option>
+                                        <option value="Sertifikasi">Sertifikasi</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
                                 </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
-                                <select
-                                    name="category"
-                                    className="w-full p-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-[#5AA0FF] outline-none text-sm transition-all"
-                                    value={formData.category}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="MBKM">MBKM</option>
-                                    <option value="Pertukaran">Pertukaran Pelajar</option>
-                                    <option value="Kompetisi">Kompetisi</option>
-                                    <option value="Sertifikasi">Sertifikasi</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
                             </div>
 
                             {error && (
@@ -170,9 +164,23 @@ export default function TransferKreditManager() {
                 {/* List Section */}
                 <div className="lg:col-span-2">
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                            <h2 className="font-bold text-gray-900">Draft Transfer Kredit</h2>
-                            <span className="text-xs bg-white border px-2 py-1 rounded text-gray-500">{transfers.length} item</span>
+                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                            <div>
+                                <h2 className="font-bold text-gray-900">Draft Transfer Kredit</h2>
+                                <p className="text-xs text-gray-500 mt-1">Daftar kredit yang akan diproses.</p>
+                            </div>
+
+                            {/* SEARCH ON DRAFT LIST */}
+                            <div className="relative w-full md:w-64">
+                                <input
+                                    type="text"
+                                    placeholder="Cari nama atau NPM..."
+                                    className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#5AA0FF] transition-all"
+                                    value={filterSearch}
+                                    onChange={(e) => setFilterSearch(e.target.value)}
+                                />
+                                <svg className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto min-h-[300px]">
@@ -182,14 +190,14 @@ export default function TransferKreditManager() {
                                         <th className="px-6 py-4">Tanggal</th>
                                         <th className="px-6 py-4">Mahasiswa</th>
                                         <th className="px-6 py-4">Kegiatan</th>
-                                        <th className="px-6 py-4">Nilai</th>
+                                        {/* Removed Grade Column */}
                                         <th className="px-6 py-4 text-right">SKS</th>
                                         <th className="px-6 py-4 text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
-                                    {transfers.length > 0 ? (
-                                        transfers.map(t => (
+                                    {filteredTransfers.length > 0 ? (
+                                        filteredTransfers.map(t => (
                                             <tr key={t.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4 text-gray-500 text-xs font-mono">{t.date}</td>
                                                 <td className="px-6 py-4">
@@ -197,15 +205,15 @@ export default function TransferKreditManager() {
                                                     <div className="text-xs font-mono text-gray-400">{t.npm}</div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="text-gray-900">{t.activityName}</div>
-                                                    <span className="inline-block mt-1 text-[10px] uppercase font-bold text-gray-400 border px-1.5 rounded">{t.category}</span>
+                                                    <div className="text-gray-900 font-medium">{t.activityName}</div>
+                                                    <span className="inline-block mt-1 text-[10px] uppercase font-bold text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">{t.category}</span>
                                                 </td>
-                                                <td className="px-6 py-4 font-bold text-gray-800">{t.grade}</td>
-                                                <td className="px-6 py-4 text-right font-mono text-gray-600">{t.credits}</td>
+                                                {/* Removed Grade Cell */}
+                                                <td className="px-6 py-4 text-right font-mono font-bold text-gray-800">{t.credits}</td>
                                                 <td className="px-6 py-4 text-center">
                                                     <button
                                                         onClick={() => handleDelete(t.id)}
-                                                        className="text-gray-400 hover:text-red-500 transition-colors"
+                                                        className="text-gray-400 hover:text-red-500 transition-colors bg-white hover:bg-red-50 p-2 rounded-lg"
                                                         title="Hapus"
                                                     >
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -215,8 +223,8 @@ export default function TransferKreditManager() {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
-                                                Belum ada data transfer kredit.
+                                            <td colSpan={5} className="px-6 py-12 text-center text-gray-400 italic">
+                                                {transfers.length === 0 ? "Belum ada data transfer kredit." : "Data tidak ditemukan."}
                                             </td>
                                         </tr>
                                     )}
