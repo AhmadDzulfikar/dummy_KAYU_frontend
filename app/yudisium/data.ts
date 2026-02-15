@@ -37,6 +37,10 @@ export interface Submission {
     rejectReason?: string;
     decisionDate?: string;
     decisionBy?: string;
+
+    // Dummy Eligibility Flags
+    hasRetakeDE?: boolean;
+    hasGradeWashing?: boolean;
 }
 
 // Helper to generate dates
@@ -64,9 +68,20 @@ export const STUDENTS: Student[] = Array.from({ length: 50 }).map((_, i) => {
 // 2. Generate Submissions (linked to some students)
 // We'll pick the first 20 students to have submissions
 export const SUBMISSIONS: Submission[] = STUDENTS.slice(0, 20).map((student, i) => {
-    const statusOptions: SubmissionStatus[] = ['Submitted', 'Approved', 'Rejected'];
-    // Removed 'In Review' from rotation
-    const status = statusOptions[i % 3];
+    // Default status is ALWAYS 'Submitted'
+    const status: SubmissionStatus = 'Submitted';
+
+    // Special Case: "MHSTDKCUMLAUDE"
+    // We'll force the 5th student (index 4) to be this specific case
+    let name = student.name;
+    let hasRetakeDE = false;
+    let hasGradeWashing = false;
+
+    if (i === 4) {
+        name = "MHSTDKCUMLAUDE";
+        // Flag them as having issues with retake or grade washing
+        hasGradeWashing = true;
+    }
 
     const isComplete = i % 3 !== 0; // some have issues
     const issues = isComplete ? [] : ['Missing TOEFL certificate', 'Transcript mismatch', 'Tuition fee unresolved'];
@@ -74,7 +89,7 @@ export const SUBMISSIONS: Submission[] = STUDENTS.slice(0, 20).map((student, i) 
     return {
         id: `YUD-${1000 + i}`,
         studentNpm: student.npm,
-        studentName: student.name,
+        studentName: name, // Use overridden name
         prodi: student.prodi,
         batch: student.batch,
         status: status,
@@ -85,10 +100,12 @@ export const SUBMISSIONS: Submission[] = STUDENTS.slice(0, 20).map((student, i) 
         requiredCoursesTaken: 40, // Mostly valid
         minGpaPassed: student.gpa >= 2.0,
         transferCredits: Math.floor(Math.random() * 10),
-        predicate: status === 'Approved' ? 'Cum Laude' : undefined,
-        rejectReason: status === 'Rejected' ? 'Documents incomplete and deadline passed.' : undefined,
-        decisionDate: (status === 'Approved' || status === 'Rejected') ? randomDate(new Date(2025, 6, 2), new Date(2025, 7, 1)) : undefined,
-        decisionBy: (status === 'Approved' || status === 'Rejected') ? 'Staff Budi' : undefined,
+        predicate: undefined,
+        rejectReason: undefined,
+        decisionDate: undefined,
+        decisionBy: undefined,
+        hasRetakeDE: hasRetakeDE,
+        hasGradeWashing: hasGradeWashing,
     };
 });
 

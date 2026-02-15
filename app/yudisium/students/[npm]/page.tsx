@@ -11,6 +11,7 @@ export default function StudentDetailPage() {
     const [student, setStudent] = useState<Student | null>(null);
     const [loading, setLoading] = useState(true);
     const [relatedSubmissionId, setRelatedSubmissionId] = useState<string | null>(null);
+    const [isMhstDkCumlaude, setIsMhstDkCumlaude] = useState(false);
 
     useEffect(() => {
         if (params.npm) {
@@ -18,7 +19,15 @@ export default function StudentDetailPage() {
             if (s) {
                 setStudent(s);
                 const sub = getSubmissionByNpm(s.npm);
-                if (sub) setRelatedSubmissionId(sub.id);
+                if (sub) {
+                    setRelatedSubmissionId(sub.id);
+                    // Check if this is the special student based on the name from SUBMISSION
+                    // In data.ts we overrode the name in SUBMISSIONS, but here we got the STUDENT object which has generic name
+                    // But we can check if the sub.studentName is MHSTDKCUMLAUDE
+                    if (sub.studentName === 'MHSTDKCUMLAUDE' || s.name === "MHSTDKCUMLAUDE") {
+                        setIsMhstDkCumlaude(true);
+                    }
+                }
             } else {
                 router.push('/403');
             }
@@ -29,8 +38,8 @@ export default function StudentDetailPage() {
     if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
     if (!student) return null;
 
-    // Dummy Transcript Data
-    const TRANSCRIPT = [
+    // Dummy Transcript Data - Dynamic based on student
+    let transcriptData = [
         { term: 'Gasal 2020/2021', code: 'CS101', name: 'Foundations of Programming', credits: 4, grade: 'A' },
         { term: 'Gasal 2020/2021', code: 'CS102', name: 'Discrete Structure 1', credits: 3, grade: 'A-' },
         { term: 'Genap 2020/2021', code: 'CS103', name: 'Data Structures & Algo', credits: 4, grade: 'B+' },
@@ -40,6 +49,20 @@ export default function StudentDetailPage() {
         { term: 'Genap 2021/2022', code: 'CS204', name: 'Software Engineering', credits: 3, grade: 'A-' },
         { term: 'Genap 2021/2022', code: 'CS205', name: 'Computer Networks', credits: 3, grade: 'B+' },
     ];
+
+    // If it's the special student, inject the Grade Washing scenario
+    if (isMhstDkCumlaude) {
+        transcriptData = [
+            { term: 'Gasal 2020/2021', code: 'CS101', name: 'Foundations of Programming', credits: 4, grade: 'C' }, // Attempt 1
+            { term: 'Gasal 2021/2022', code: 'CS101', name: 'Foundations of Programming', credits: 4, grade: 'A' }, // Attempt 2 (Retake)
+            { term: 'Gasal 2020/2021', code: 'CS102', name: 'Discrete Structure 1', credits: 3, grade: 'A-' },
+            { term: 'Genap 2020/2021', code: 'CS103', name: 'Data Structures & Algo', credits: 4, grade: 'B+' },
+            { term: 'Genap 2020/2021', code: 'CS104', name: 'Computer Architecture', credits: 3, grade: 'A' },
+            { term: 'Gasal 2021/2022', code: 'CS201', name: 'Database Systems', credits: 4, grade: 'A' },
+            { term: 'Gasal 2021/2022', code: 'CS202', name: 'Operating Systems', credits: 4, grade: 'B' },
+            { term: 'Genap 2021/2022', code: 'CS204', name: 'Software Engineering', credits: 3, grade: 'A-' },
+        ];
+    }
 
     return (
         <div className="space-y-6">
@@ -53,7 +76,9 @@ export default function StudentDetailPage() {
             {/* Header */}
             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{student.name}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                        {isMhstDkCumlaude ? "MHSTDKCUMLAUDE" : student.name}
+                    </h1>
                     <div className="mt-1 text-gray-500 space-x-3 text-sm">
                         <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-700">{student.npm}</span>
                         <span>•</span>
@@ -93,15 +118,21 @@ export default function StudentDetailPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {TRANSCRIPT.map((row, i) => (
-                                <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                                    <td className="px-6 py-3 text-sm text-gray-500">{row.term}</td>
-                                    <td className="px-6 py-3 text-sm text-gray-500 font-mono">{row.code}</td>
-                                    <td className="px-6 py-3 text-sm text-gray-900 font-medium">{row.name}</td>
-                                    <td className="px-6 py-3 text-sm text-gray-900 text-right">{row.credits}</td>
-                                    <td className="px-6 py-3 text-sm text-gray-900 text-center font-bold">{row.grade}</td>
-                                </tr>
-                            ))}
+                            {transcriptData.map((row, i) => {
+                                // Highlight logic for duplicate course codes (retakes)
+                                const isRetake = transcriptData.filter(r => r.code === row.code).length > 1;
+                                const style = isRetake ? 'bg-amber-50' : (i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50');
+
+                                return (
+                                    <tr key={i} className={style}>
+                                        <td className="px-6 py-3 text-sm text-gray-500">{row.term}</td>
+                                        <td className="px-6 py-3 text-sm text-gray-500 font-mono">{row.code}</td>
+                                        <td className="px-6 py-3 text-sm text-gray-900 font-medium">{row.name} {isRetake && <span className="ml-2 text-xs text-amber-600 font-semibold">(Attempt)</span>}</td>
+                                        <td className="px-6 py-3 text-sm text-gray-900 text-right">{row.credits}</td>
+                                        <td className="px-6 py-3 text-sm text-gray-900 text-center font-bold">{row.grade}</td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                     <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center text-sm text-gray-500 italic">

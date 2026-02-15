@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getSubmissionById, Submission, SubmissionStatus } from '@/app/yudisium/data';
+import { Submission, SubmissionStatus } from '@/app/yudisium/data';
+import { getStoredSubmissionById, updateStoredSubmission } from '@/app/yudisium/storage';
 import Link from 'next/link';
 
 export default function SubmissionDetailPage() {
@@ -25,9 +26,9 @@ export default function SubmissionDetailPage() {
 
     useEffect(() => {
         if (params.id) {
-            const sub = getSubmissionById(params.id as string);
+            const sub = getStoredSubmissionById(params.id as string);
             if (sub) {
-                setSubmission({ ...sub }); // Clone to allow local mutation
+                setSubmission({ ...sub }); // Clone to allow local mutation before saving
             } else {
                 router.push('/403');
             }
@@ -41,13 +42,19 @@ export default function SubmissionDetailPage() {
             return;
         }
         if (submission) {
-            setSubmission({
+            const updated: Submission = {
                 ...submission,
                 status: 'Approved',
                 predicate: predicate,
                 decisionDate: new Date().toISOString().split('T')[0],
                 decisionBy: 'You (Yudisium Staff)'
-            });
+            };
+
+            // Persist
+            updateStoredSubmission(updated);
+
+            // Update local state
+            setSubmission(updated);
             setShowApproveModal(false);
             showToast('Submission approved successfully!', 'success');
         }
@@ -59,15 +66,21 @@ export default function SubmissionDetailPage() {
             return;
         }
         if (submission) {
-            setSubmission({
+            const updated: Submission = {
                 ...submission,
                 status: 'Rejected',
                 rejectReason: rejectReason,
                 decisionDate: new Date().toISOString().split('T')[0],
                 decisionBy: 'You (Yudisium Staff)'
-            });
+            };
+
+            // Persist
+            updateStoredSubmission(updated);
+
+            // Update local state
+            setSubmission(updated);
             setShowRejectModal(false);
-            showToast('Submission returned for revision.', 'error');
+            showToast('Submission returned for revision. Reason saved.', 'error');
         }
     };
 
@@ -170,6 +183,19 @@ export default function SubmissionDetailPage() {
                                     <p className="text-xs text-gray-400 mt-1">Counted separately</p>
                                 </div>
                             </div>
+
+                            {/* Honors Eligibility Card */}
+                            {(submission.hasRetakeDE || submission.hasGradeWashing) && (
+                                <div className="bg-red-50 p-4 rounded-lg border border-red-200 mt-2">
+                                    <h4 className="text-sm font-bold text-red-800 flex items-center mb-1">
+                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                        Not Eligible for Cum Laude
+                                    </h4>
+                                    <p className="text-xs text-red-700">
+                                        Reason: {submission.hasRetakeDE ? 'Course retake from D/E grade detected.' : 'Grade improvement retake detected.'}
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -271,11 +297,16 @@ export default function SubmissionDetailPage() {
                                     onChange={(e) => setPredicate(e.target.value)}
                                 >
                                     <option value="">-- Select Predicate --</option>
-                                    <option value="Summa Cum Laude">Summa Cum Laude</option>
-                                    <option value="Cum Laude">Cum Laude</option>
+                                    <option value="Summa Cum Laude" disabled={submission.hasRetakeDE || submission.hasGradeWashing}>Summa Cum Laude</option>
+                                    <option value="Cum Laude" disabled={submission.hasRetakeDE || submission.hasGradeWashing}>Cum Laude</option>
                                     <option value="Sangat Memuaskan">Sangat Memuaskan</option>
                                     <option value="Memuaskan">Memuaskan</option>
                                 </select>
+                                {(submission.hasRetakeDE || submission.hasGradeWashing) && (
+                                    <p className="mt-1 text-xs text-red-500">
+                                        Not eligible for Cum Laude: {submission.hasRetakeDE ? 'course retake' : 'grade improvement'} detected.
+                                    </p>
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Optional Comment</label>
@@ -348,7 +379,6 @@ export default function SubmissionDetailPage() {
 function getStatusColor(status: SubmissionStatus) {
     switch (status) {
         case 'Submitted': return 'bg-blue-100 text-blue-800';
-        case 'In Review': return 'bg-yellow-100 text-yellow-800';
         case 'Approved': return 'bg-green-100 text-green-800';
         case 'Rejected': return 'bg-red-100 text-red-800';
         default: return 'bg-gray-100 text-gray-800';

@@ -1,14 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { STUDENTS, getSubmissionByNpm } from '@/app/yudisium/data';
+import { useState, useEffect } from 'react';
+import { STUDENTS } from '@/app/yudisium/data';
+import { getStoredSubmissionByNpm } from '@/app/yudisium/storage';
 import { useRouter } from 'next/navigation';
+
+type SortField = 'program' | 'batch' | null;
+type SortDirection = 'asc' | 'desc';
 
 export default function StudentsListPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
+    const [mounted, setMounted] = useState(false);
+
+    // Values that rely on hydration/local storage need to be safe
+    // We'll force re-render on mount to access storage
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Sorting state
+    const [sortField, setSortField] = useState<SortField>(null);
+    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
     // Filter students
     const filtered = STUDENTS.filter(student => {
@@ -20,17 +35,60 @@ export default function StudentsListPage() {
         );
     });
 
+    // Helper to map Prodi to Code (IK/SI)
+    const getProdiCode = (prodiName: string) => {
+        if (prodiName === 'Computer Science') return 'IK';
+        if (prodiName === 'Information Systems') return 'SI';
+        return prodiName; // Fallback
+    };
+
+    // Sorting Logic
+    const sorted = [...filtered].sort((a, b) => {
+        if (!sortField) return 0;
+
+        let valA: string | number = '';
+        let valB: string | number = '';
+
+        if (sortField === 'program') {
+            valA = getProdiCode(a.prodi);
+            valB = getProdiCode(b.prodi);
+        } else if (sortField === 'batch') {
+            valA = a.batch;
+            valB = b.batch;
+        }
+
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+
     // Pagination
-    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
     if (page > totalPages && totalPages > 0) setPage(1);
-    const displayed = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    const displayed = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     const handleRowClick = (npm: string) => {
         router.push(`/yudisium/students/${npm}`);
     };
 
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const getSortIcon = (field: SortField) => {
+        if (sortField !== field) return <span className="text-gray-300 ml-1">↕</span>;
+        return sortDirection === 'asc' ? <span className="text-[#5AA0FF] ml-1">↑</span> : <span className="text-[#5AA0FF] ml-1">↓</span>;
+    };
+
     const getStatusBadge = (npm: string) => {
-        const sub = getSubmissionByNpm(npm);
+        if (!mounted) return <span className="bg-gray-100 text-transparent rounded-full px-2 py-0.5 animate-pulse">...</span>;
+
+        const sub = getStoredSubmissionByNpm(npm);
         if (!sub) return <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">Not Submitted</span>;
 
         let color = 'bg-gray-100 text-gray-700';
@@ -75,7 +133,21 @@ export default function StudentsListPage() {
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">NPM</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Program / Batch</th>
+                                {/* Split Program and Batch */}
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('program')}
+                                >
+                                    Program {getSortIcon('program')}
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('batch')}
+                                >
+                                    Batch {getSortIcon('batch')}
+                                </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Academic Status</th>
                                 <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">GPA</th>
                                 <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Credits</th>
@@ -92,10 +164,10 @@ export default function StudentsListPage() {
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-[#5AA0FF] transition-colors">{student.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.npm}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div className="font-medium text-gray-900">{student.prodi}</div>
-                                            <div className="text-xs text-gray-400">{student.batch}</div>
-                                        </td>
+                                        {/* Separate Program and Batch columns */}
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{getProdiCode(student.prodi)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.batch}</td>
+
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${student.status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                                                 {student.status}
@@ -110,7 +182,7 @@ export default function StudentsListPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">No data found.</td>
+                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">No data found.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -126,7 +198,7 @@ export default function StudentsListPage() {
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="font-medium">{filtered.length}</span> results
+                                    Showing <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-medium">{Math.min(page * ITEMS_PER_PAGE, sorted.length)}</span> of <span className="font-medium">{sorted.length}</span> results
                                 </p>
                             </div>
                             <div>

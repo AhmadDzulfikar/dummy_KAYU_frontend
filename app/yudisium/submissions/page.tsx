@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { SUBMISSIONS, SubmissionStatus, CompletenessStatus } from '@/app/yudisium/data';
+import { useState, useEffect } from 'react';
+import { Submission, SubmissionStatus, CompletenessStatus } from '@/app/yudisium/data';
+import { getStoredSubmissions } from '@/app/yudisium/storage';
 import { useRouter } from 'next/navigation';
 
 type SortField = 'program' | 'batch' | null;
@@ -13,12 +14,23 @@ export default function SubmissionsPage() {
     const [page, setPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
 
+    // Data State
+    const [submissions, setSubmissions] = useState<Submission[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     // Sorting state
     const [sortField, setSortField] = useState<SortField>(null);
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
+    // Load Data on Mount
+    useEffect(() => {
+        const data = getStoredSubmissions();
+        setSubmissions(data);
+        setIsLoading(false);
+    }, []);
+
     // Filtering
-    const filtered = SUBMISSIONS.filter(sub => {
+    const filtered = submissions.filter(sub => {
         const lower = searchTerm.toLowerCase();
         return (
             sub.studentName.toLowerCase().includes(lower) ||
@@ -151,7 +163,11 @@ export default function SubmissionsPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {displayed.length > 0 ? (
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">Loading data...</td>
+                                </tr>
+                            ) : displayed.length > 0 ? (
                                 displayed.map((sub, idx) => (
                                     <tr
                                         key={sub.id}
