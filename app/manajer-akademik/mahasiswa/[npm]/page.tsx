@@ -12,6 +12,9 @@ export default function DetailMahasiswaManager() {
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
+    // State for "Show More" functionality in Mata Kuliah Wajib
+    const [showAllFinished, setShowAllFinished] = useState(false);
+
     // Filter using the deterministic data
     const student = MANAGER_STUDENTS.find(s => s.npm === npm);
 
@@ -65,30 +68,37 @@ export default function DetailMahasiswaManager() {
 
     // --- DUMMY DATA FOR UI ---
 
-    // 1. Transcript Data (15-20 rows)
+    // 1. Transcript Data (Expanded with External Courses)
     const transcriptData = [
-        { code: 'CSGE601001', name: 'Dasar Pemrograman', term: 1, credits: 4, grade: 'A' },
-        { code: 'CSGE601002', name: 'Matematika Diskrit 1', term: 1, credits: 3, grade: 'A-' },
-        { code: 'CSGE601003', name: 'Aljabar Linear', term: 1, credits: 3, grade: 'B+' },
-        { code: 'UIGE600001', name: 'MPK Terintegrasi', term: 1, credits: 6, grade: 'A' },
-        { code: 'CSGE601004', name: 'Pengantar Sistem Digital', term: 1, credits: 3, grade: 'B' },
+        { code: 'CSGE601001', name: 'Dasar Pemrograman', term: '1', credits: 4, grade: 'A' },
+        { code: 'CSGE601002', name: 'Matematika Diskrit 1', term: '1', credits: 3, grade: 'A-' },
+        { code: 'CSGE601003', name: 'Aljabar Linear', term: '1', credits: 3, grade: 'B+' },
+        { code: 'UIGE600001', name: 'MPK Terintegrasi', term: '1', credits: 6, grade: 'A' },
+        { code: 'CSGE601004', name: 'Pengantar Sistem Digital', term: '1', credits: 3, grade: 'B' },
 
-        { code: 'CSGE602005', name: 'Struktur Data & Algoritma', term: 2, credits: 4, grade: 'A' },
-        { code: 'CSGE602006', name: 'Arsitektur Komputer', term: 2, credits: 3, grade: 'B+' },
-        { code: 'CSGE602007', name: 'Basis Data', term: 2, credits: 4, grade: 'B' },
-        { code: 'CSGE602008', name: 'Matematika Diskrit 2', term: 2, credits: 3, grade: 'A-' },
-        { code: 'UIGE600002', name: 'MPK Bahasa Inggris', term: 2, credits: 2, grade: 'A' },
+        { code: 'CSGE602005', name: 'Struktur Data & Algoritma', term: '2', credits: 4, grade: 'A' },
+        { code: 'CSGE602006', name: 'Arsitektur Komputer', term: '2', credits: 3, grade: 'B+' },
+        { code: 'CSGE602007', name: 'Basis Data', term: '2', credits: 4, grade: 'B' },
+        { code: 'CSGE602008', name: 'Matematika Diskrit 2', term: '2', credits: 3, grade: 'A-' },
+        { code: 'UIGE600002', name: 'MPK Bahasa Inggris', term: '2', credits: 2, grade: 'A' },
 
-        { code: 'CSGE603009', name: 'Perancangan & Pemrograman Web', term: 3, credits: 4, grade: 'A' },
-        { code: 'CSGE603010', name: 'Sistem Operasi', term: 3, credits: 4, grade: 'B+' },
-        { code: 'CSGE603011', name: 'Jaringan Komputer', term: 3, credits: 4, grade: 'B' },
-        { code: 'CSGE603012', name: 'Probabilitas & Statistika', term: 3, credits: 3, grade: 'C+' },
+        { code: 'CSGE603009', name: 'Perancangan & Pemrograman Web', term: '3', credits: 4, grade: 'A' },
+        { code: 'CSGE603010', name: 'Sistem Operasi', term: '3', credits: 4, grade: 'B+' },
+        { code: 'CSGE603011', name: 'Jaringan Komputer', term: '3', credits: 4, grade: 'B' },
+        { code: 'CSGE603012', name: 'Probabilitas & Statistika', term: '3', credits: 3, grade: 'C+' },
 
-        { code: 'CSGE604013', name: 'Kecerdasan Artifisial', term: 4, credits: 4, grade: 'B+' },
-        { code: 'CSGE604014', name: 'Rekayasa Perangkat Lunak', term: 4, credits: 3, grade: 'A-' },
+        { code: 'CSGE604013', name: 'Kecerdasan Artifisial', term: '4', credits: 4, grade: 'B+' },
+        { code: 'CSGE604014', name: 'Rekayasa Perangkat Lunak', term: '4', credits: 3, grade: 'A-' },
+
+        // External Courses
+        { code: 'EXT000101', name: 'Bahasa Portugis', term: 'Eksternal', credits: 3, grade: 'A' },
+        { code: 'EXT000102', name: 'Bahasa Perancis', term: 'Eksternal', credits: 3, grade: 'A-' },
+        { code: 'EXT000103', name: 'Bahasa Jepang', term: 'Eksternal', credits: 3, grade: 'B+' },
+        { code: 'EXT000205', name: 'Produksi Media', term: 'Eksternal', credits: 3, grade: 'A' },
+        { code: 'EXT000206', name: 'Fotografi Digital', term: 'Eksternal', credits: 2, grade: 'B' },
     ];
 
-    // 2. Required Courses (Taken/Not Taken)
+    // 2. Required Courses (Taken/Not Taken) - Expanded for Show More
     const requiredCourses = {
         taken: [
             { name: 'Dasar Pemrograman', credits: 4 },
@@ -99,6 +109,14 @@ export default function DetailMahasiswaManager() {
             { name: 'Matematika Diskrit 1', credits: 3 },
             { name: 'Matematika Diskrit 2', credits: 3 },
             { name: 'Aljabar Linear', credits: 3 },
+            { name: 'Pengantar Sistem Digital', credits: 3 },
+            { name: 'Arsitektur Komputer', credits: 3 },
+            { name: 'Probabilitas & Statistika', credits: 3 },
+            { name: 'Perancangan & Pemrograman Web', credits: 4 },
+            { name: 'Kecerdasan Artifisial', credits: 4 },
+            { name: 'Rekayasa Perangkat Lunak', credits: 3 },
+            { name: 'MPK Terintegrasi', credits: 6 },
+            { name: 'MPK Bahasa Inggris', credits: 2 },
         ],
         notTaken: [
             { name: 'Proyek Perangkat Lunak', credits: 6 },
@@ -106,12 +124,20 @@ export default function DetailMahasiswaManager() {
             { name: 'Kerja Praktik', credits: 2 },
             { name: 'Tugas Akhir', credits: 6 },
             { name: 'Etika Profesi', credits: 2 },
+            { name: 'Kewirausahaan', credits: 2 },
         ]
     };
 
     const requiredTotal = requiredCourses.taken.length + requiredCourses.notTaken.length;
     const requiredProgress = requiredCourses.taken.length;
     const progressPercent = Math.round((requiredProgress / requiredTotal) * 100);
+
+    // Filter finished courses for display
+    const visibleFinishedCourses = showAllFinished ? requiredCourses.taken : requiredCourses.taken.slice(0, 5);
+
+    // Calculate Semester (Approximate for Feb 2026)
+    // Batch 2020 -> 2026 is Year 6 -> Sem 12
+    const currentSemester = (2026 - student.batch) * 2;
 
     return (
         <div className="space-y-8 pb-10">
@@ -137,6 +163,10 @@ export default function DetailMahasiswaManager() {
                         <div className="flex items-center gap-2">
                             <span className="font-semibold text-gray-400">Angkatan</span>
                             <span>{student.batch}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-400">Semester</span>
+                            <span>{currentSemester}</span>
                         </div>
                     </div>
                     <div>
@@ -185,46 +215,7 @@ export default function DetailMahasiswaManager() {
                 {/* LEFT COLUMN (2/3) */}
                 <div className="lg:col-span-2 space-y-8">
 
-                    {/* E) Transkrip */}
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                            <h3 className="font-bold text-gray-900 text-lg">Transkrip Akademik</h3>
-                            <button className="text-xs font-semibold text-[#5AA0FF] hover:underline">Unduh PDF</button>
-                        </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="bg-gray-50 border-b border-gray-100 text-left text-xs uppercase font-semibold text-gray-500">
-                                        <th className="pl-6 pr-4 py-4 w-28">Kode MK</th>
-                                        <th className="px-4 py-4">Nama Mata Kuliah</th>
-                                        <th className="px-4 py-4 w-24">Semester</th>
-                                        <th className="px-4 py-4 w-20 text-right">SKS</th>
-                                        <th className="pl-4 pr-6 py-4 w-20 text-left">Nilai</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {transcriptData.map((course, i) => (
-                                        <tr key={i} className="hover:bg-blue-50/30 transition-colors">
-                                            <td className="pl-6 pr-4 py-3 font-mono text-xs text-gray-500">{course.code}</td>
-                                            <td className="px-4 py-3 font-medium text-gray-800">{course.name}</td>
-                                            <td className="px-4 py-3 text-gray-500">Sem. {course.term}</td>
-                                            <td className="px-4 py-3 text-right text-gray-600 font-mono">{course.credits}</td>
-                                            <td className="pl-4 pr-6 py-3 text-left">
-                                                <span className={`font-bold ${course.grade.startsWith('A') ? 'text-emerald-600' : 'text-gray-700'}`}>
-                                                    {course.grade}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 text-xs text-center text-gray-400 italic">
-                            Menampilkan 16 dari {student.credits > 100 ? '40+' : '20+'} mata kuliah
-                        </div>
-                    </div>
-
-                    {/* F) Mata Kuliah Wajib */}
+                    {/* F) Mata Kuliah Wajib (Moved UP) */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                         <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
                             <div className="flex justify-between items-center mb-2">
@@ -260,17 +251,68 @@ export default function DetailMahasiswaManager() {
                                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
                                     <h4 className="font-bold text-gray-700">Sudah Selesai</h4>
                                 </div>
-                                <div className="space-y-2 opacity-70 hover:opacity-100 transition-opacity">
-                                    {requiredCourses.taken.map((course, i) => (
-                                        <div key={i} className="p-3 bg-gray-50 border border-gray-100 rounded-lg flex justify-between items-center">
+                                <div className="space-y-2">
+                                    {visibleFinishedCourses.map((course, i) => (
+                                        <div key={i} className="p-3 bg-gray-50 border border-gray-100 rounded-lg flex justify-between items-center opacity-70 hover:opacity-100 transition-opacity">
                                             <span className="text-sm text-gray-600 line-through decoration-gray-400">{course.name}</span>
-                                            <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] text-gray-400">{course.credits} SKS</span>
+                                                <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
+
+                                {requiredCourses.taken.length > 5 && (
+                                    <button
+                                        onClick={() => setShowAllFinished(!showAllFinished)}
+                                        className="w-full py-2 text-xs font-semibold text-[#5AA0FF] border border-[#5AA0FF]/20 rounded-lg hover:bg-[#5AA0FF]/5 transition-colors"
+                                    >
+                                        {showAllFinished ? 'Tampilkan Lebih Sedikit' : `Tampilkan ${requiredCourses.taken.length - 5} Lainnya`}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
+
+                    {/* E) Transkrip (Moved DOWN) */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                            <h3 className="font-bold text-gray-900 text-lg">Transkrip Akademik</h3>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="bg-gray-50 border-b border-gray-100 text-left text-xs uppercase font-semibold text-gray-500">
+                                        <th className="pl-6 pr-4 py-4 w-28">Kode MK</th>
+                                        <th className="px-4 py-4">Nama Mata Kuliah</th>
+                                        <th className="px-4 py-4 w-24">Semester</th>
+                                        <th className="px-4 py-4 w-20 text-right">SKS</th>
+                                        <th className="pl-4 pr-6 py-4 w-20 text-left">Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {transcriptData.map((course, i) => (
+                                        <tr key={i} className="hover:bg-blue-50/30 transition-colors">
+                                            <td className="pl-6 pr-4 py-3 font-mono text-xs text-gray-500">{course.code}</td>
+                                            <td className="px-4 py-3 font-medium text-gray-800">{course.name}</td>
+                                            <td className="px-4 py-3 text-gray-500">{course.term === 'Eksternal' ? <span className="text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded font-bold">EKSTERNAL</span> : `Sem. ${course.term}`}</td>
+                                            <td className="px-4 py-3 text-right text-gray-600 font-mono">{course.credits}</td>
+                                            <td className="pl-4 pr-6 py-3 text-left">
+                                                <span className={`font-bold ${course.grade.startsWith('A') ? 'text-emerald-600' : 'text-gray-700'}`}>
+                                                    {course.grade}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 text-xs text-center text-gray-400 italic">
+                            Menampilkan {transcriptData.length} mata kuliah
+                        </div>
+                    </div>
+
                 </div>
 
                 {/* RIGHT COLUMN (1/3) - Status Cards */}
