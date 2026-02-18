@@ -202,7 +202,9 @@ export default function GraduationCalculatorPage() {
                             Anda <span className="font-bold text-gray-800">belum memenuhi syarat</span>.
                             SKS reguler Anda adalah <span className="font-bold text-red-500">{requirements.regularCredits.current}/{requirements.regularCredits.target}</span> dan/atau mata kuliah wajib belum lengkap.
                             <br /><br />
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Catatan: SKS Transfer tidak menggantikan SKS reguler yang kurang.</span>
+                            {(requirements.regularCredits.current + requirements.transferCredits <= 144) && (
+                                <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Catatan: SKS Transfer tidak menggantikan SKS reguler yang kurang.</span>
+                            )}
                         </p>
 
                         <div className="flex gap-3">

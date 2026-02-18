@@ -200,9 +200,19 @@ export default function GraduationCalculatorNotEligiblePage() {
                         <h3 className="text-2xl font-bold text-center text-gray-900 mb-2">Submit anyway?</h3>
                         <p className="text-gray-500 text-center text-sm leading-relaxed mb-6">
                             You are <span className="font-bold text-gray-800">not yet eligible</span>.
-                            Your regular course credits are <span className="font-bold text-red-500">{requirements.regularCredits.current}/{requirements.regularCredits.target}</span> and/or required courses are incomplete.
-                            <br /><br />
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Note: Transfer credits do not replace missing regular credits.</span>
+                            {(requirements.regularCredits.current + requirements.transferCredits >= 144)
+                                ? <>
+                                    Your required courses are incomplete <span className="font-bold text-red-500">({requirements.requiredCourses.current}/{requirements.requiredCourses.target})</span>.
+                                    <br /><br />
+                                </>
+                                : <>
+                                    Your regular course credits are <span className="font-bold text-red-500">{requirements.regularCredits.current}/{requirements.regularCredits.target}</span> and/or required courses are incomplete.
+                                    <br /><br />
+                                </>
+                            }
+                            {(requirements.regularCredits.current + requirements.transferCredits < 144) && (
+                                <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">Note: Transfer credits do not replace missing regular credits.</span>
+                            )}
                         </p>
 
                         <div className="flex gap-3">

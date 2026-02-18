@@ -15,10 +15,11 @@ export default function StudentDashboardWarning() {
 
     // Dummy Data (WARNING + Not Eligible)
     const summaryData = [
-        { label: 'SKS Reguler', value: '42', sub: 'Hanya SKS Mata Kuliah' },
+        { label: 'SKS Reguler', value: '35', sub: 'Hanya SKS Mata Kuliah' },
         { label: 'Selesai', value: '16/40', sub: 'Mata Kuliah Wajib' },
         { label: 'IPK', value: '2.85', sub: 'Skala 4.0' },
-        { label: 'SKS Transfer', value: '6', sub: 'Dihitung terpisah', highlight: true },
+        { label: 'SKS Transfer', value: '6', sub: 'Dihitung terpisah' },
+        { label: 'SKS Total', value: '41', sub: 'Gabungan Reguler & Transfer', highlight: true },
     ];
 
     const maxCreditsRules = [
@@ -54,7 +55,7 @@ export default function StudentDashboardWarning() {
             {/* Assuming layout provides "Student Dashboard", ensuring specific status text is visible */}
 
             {/* 2. Quick Academic Summary */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <section className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 {summaryData.map((item, idx) => (
                     <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border ${item.highlight ? 'border-blue-100 bg-blue-50/30' : 'border-gray-100'} flex flex-col items-center text-center hover:shadow-md transition-shadow group relative overflow-hidden`}>
                         {item.highlight && <div className="absolute top-0 right-0 w-8 h-8 bg-blue-100 rounded-bl-2xl"></div>}
@@ -118,7 +119,7 @@ export default function StudentDashboardWarning() {
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                     <span className="block text-xs text-gray-500 font-semibold mb-1">Total SKS Reguler</span>
-                                    <span className="text-xl font-bold text-gray-900">42</span>
+                                    <span className="text-xl font-bold text-gray-900">35</span>
                                 </div>
                                 <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
                                     <span className="block text-xs text-[#5AA0FF] font-bold mb-1">Maksimal SKS</span>
@@ -127,6 +128,28 @@ export default function StudentDashboardWarning() {
                             </div>
 
                             {/* Triggered Reasons List */}
+                            {/* DO Threat Alert */}
+                            <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
+                                <div className="flex items-start gap-3">
+                                    <div className="p-1.5 bg-red-100 text-red-600 rounded-lg shrink-0 mt-0.5">
+                                        <AlertCircle className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-red-800">Ancaman Drop Out (DO)</h3>
+                                        <p className="text-xs text-red-700/80 mt-1 leading-relaxed">
+                                            Total SKS Reguler Anda saat ini adalah <span className="font-bold">35 SKS</span>.
+                                            Anda <span className="font-bold underline">wajib mencapai minimal 42 SKS</span> pada akhir Semester 4 (Evaluasi 2 Tahun).
+                                        </p>
+                                        <div className="mt-3 flex items-center gap-2">
+                                            <div className="text-xs font-bold text-red-600 bg-white border border-red-200 rounded-lg px-3 py-1.5 shadow-sm inline-block">
+                                                Kurang 7 SKS lagi
+                                            </div>
+                                            <span className="text-[10px] text-red-500 font-medium">Harus diambil semester ini</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="mb-6">
                                 <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wide">Alasan Peringatan</h3>
                                 <ul className="space-y-2">

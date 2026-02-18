@@ -18,7 +18,8 @@ export default function StudentDashboard() {
         { label: 'SKS Reguler', value: '138', sub: 'Hanya SKS Mata Kuliah' },
         { label: 'Selesai', value: '24/40', sub: 'Mata Kuliah Wajib' },
         { label: 'IPK', value: '3.28', sub: 'Skala 4.0' },
-        { label: 'SKS Transfer', value: '6', sub: 'Dihitung terpisah', highlight: true },
+        { label: 'SKS Transfer', value: '6', sub: 'Dihitung terpisah' },
+        { label: 'SKS Total', value: '144', sub: 'Gabungan Reguler & Transfer', highlight: true },
     ];
 
     const maxCreditsRules = [
@@ -50,7 +51,7 @@ export default function StudentDashboard() {
         <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
 
             {/* 1. Quick Academic Summary */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <section className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 {summaryData.map((item, idx) => (
                     <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border ${item.highlight ? 'border-blue-100 bg-blue-50/30' : 'border-gray-100'} flex flex-col items-center text-center hover:shadow-md transition-shadow group relative overflow-hidden`}>
                         {item.highlight && <div className="absolute top-0 right-0 w-8 h-8 bg-blue-100 rounded-bl-2xl"></div>}
