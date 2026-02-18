@@ -90,20 +90,12 @@ export default function PADashboard() {
             </div>
 
             {/* Stats Cards (Optional but good for Dashboard) */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
                     <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Mahasiswa</div>
                     <div className="text-2xl font-bold text-gray-900 mt-1">{filteredStudents.length}</div>
                 </div>
-                <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Rata-rata IPK</div>
-                    <div className="text-2xl font-bold text-gray-900 mt-1">
-                        {filteredStudents.length > 0
-                            ? (filteredStudents.reduce((acc, curr) => acc + curr.gpa, 0) / filteredStudents.length).toFixed(2)
-                            : '0.00'
-                        }
-                    </div>
-                </div>
+
                 <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
                     <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Status Aktif</div>
                     <div className="text-2xl font-bold text-emerald-600 mt-1">
