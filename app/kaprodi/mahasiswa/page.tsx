@@ -125,7 +125,8 @@ export default function DaftarMahasiswaPage() {
                     <table className="w-full text-sm text-left text-gray-600">
                         <thead className="text-xs text-gray-400 uppercase bg-gray-50 font-medium">
                             <tr>
-                                <th className="px-6 py-4">Mahasiswa</th>
+                                <th className="px-6 py-4">Nama</th>
+                                <th className="px-6 py-4">NPM</th>
                                 <th className="px-6 py-4">Angkatan</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4 text-right">IPK</th>
@@ -143,8 +144,10 @@ export default function DaftarMahasiswaPage() {
                                         onClick={() => router.push(`/kaprodi/mahasiswa/${student.npm}`)}
                                         className="bg-white hover:bg-blue-50 cursor-pointer transition-colors group"
                                     >
+                                        <td className="px-6 py-4 max-w-[200px]">
+                                            <div className="font-bold text-gray-900 group-hover:text-[#5AA0FF] truncate" title={student.name}>{student.name}</div>
+                                        </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900 group-hover:text-[#5AA0FF]">{student.name}</div>
                                             <div className="font-mono text-xs text-gray-400">{student.npm}</div>
                                         </td>
                                         <td className="px-6 py-4">{student.batch}</td>
@@ -188,7 +191,7 @@ export default function DaftarMahasiswaPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={tabFilter === 'Peringatan' ? 8 : 7} className="px-6 py-12 text-center text-gray-400 italic">
+                                    <td colSpan={tabFilter === 'Peringatan' ? 9 : 8} className="px-6 py-12 text-center text-gray-400 italic">
                                         Data tidak ditemukan.
                                     </td>
                                 </tr>

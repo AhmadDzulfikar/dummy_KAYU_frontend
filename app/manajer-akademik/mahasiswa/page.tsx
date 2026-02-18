@@ -12,6 +12,7 @@ export default function DaftarMahasiswaManager() {
     // Filters
     const [searchTerm, setSearchTerm] = useState('');
     const [filterBatch, setFilterBatch] = useState('Semua'); // New Batch Filter
+    const [sortBatch, setSortBatch] = useState<'asc' | 'desc'>('desc'); // Sort Batch
     const [page, setPage] = useState(1);
 
     useEffect(() => {
@@ -33,6 +34,9 @@ export default function DaftarMahasiswaManager() {
         const matchesBatch = filterBatch === 'Semua' || s.batch === parseInt(filterBatch);
 
         return matchesSearch && matchesBatch;
+    }).sort((a, b) => {
+        if (sortBatch === 'asc') return a.batch - b.batch;
+        return b.batch - a.batch;
     });
 
     // Pagination Standard
@@ -94,8 +98,16 @@ export default function DaftarMahasiswaManager() {
                     <table className="w-full text-sm text-left text-gray-600">
                         <thead className="bg-gray-50 text-xs uppercase font-semibold text-gray-500">
                             <tr>
-                                <th className="px-6 py-4">Mahasiswa</th>
-                                <th className="px-6 py-4">Angkatan</th>
+                                <th className="px-6 py-4">Nama</th>
+                                <th className="px-6 py-4">NPM</th>
+                                <th className="px-6 py-4 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => setSortBatch(current => current === 'asc' ? 'desc' : 'asc')}>
+                                    <div className="flex items-center gap-2">
+                                        Angkatan
+                                        <svg className={`w-3 h-3 text-gray-400 transition-transform ${sortBatch === 'asc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4 text-right">IPK</th>
                                 <th className="px-6 py-4 text-right">IPS</th>
@@ -112,9 +124,11 @@ export default function DaftarMahasiswaManager() {
                                         onClick={() => router.push(`/manajer-akademik/mahasiswa/${student.npm}`)}
                                         className="hover:bg-blue-50/50 cursor-pointer transition-colors group"
                                     >
+                                        <td className="px-6 py-4 max-w-[200px]">
+                                            <div className="font-bold text-gray-900 group-hover:text-[#5AA0FF] transition-colors truncate" title={student.name}>{student.name}</div>
+                                        </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900 group-hover:text-[#5AA0FF] transition-colors">{student.name}</div>
-                                            <div className="font-mono text-xs text-gray-400">{student.npm}</div>
+                                            <div className="font-mono text-xs text-gray-500">{student.npm}</div>
                                         </td>
                                         <td className="px-6 py-4">{student.batch}</td>
                                         <td className="px-6 py-4">
@@ -151,7 +165,7 @@ export default function DaftarMahasiswaManager() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-12 text-center text-gray-400 italic">
+                                    <td colSpan={9} className="px-6 py-12 text-center text-gray-400 italic">
                                         Data tidak ditemukan.
                                     </td>
                                 </tr>
