@@ -69,14 +69,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ npm: s
                             </svg>
                             Kembali ke Dasbor
                         </Link>
-                        <div className="flex space-x-2">
-                            <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
-                                Hubungi Mahasiswa
-                            </button>
-                            <button className="px-4 py-2 bg-[#5AA0FF] text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20">
-                                Evaluasi Akademik
-                            </button>
-                        </div>
+
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8">
