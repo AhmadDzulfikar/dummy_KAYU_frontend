@@ -45,6 +45,8 @@ export default function StudentDetailPage({ params }: { params: Promise<{ npm: s
         gpa: 3.00,
         ips: 3.00,
         credits: 60,
+        semester: 4,
+        totalLeave: 0,
         phone: '-',
         isAtRisk: false,
         maxSksNext: 21
@@ -95,10 +97,18 @@ export default function StudentDetailPage({ params }: { params: Promise<{ npm: s
                                     <span className="w-24 text-gray-400 text-xs uppercase tracking-wider font-bold">Batch</span>
                                     <span className="text-gray-900">{student.batch}</span>
                                 </p>
+                                <p className="flex items-center">
+                                    <span className="w-24 text-gray-400 text-xs uppercase tracking-wider font-bold">Semester</span>
+                                    <span className="text-gray-900">{student.semester}</span>
+                                </p>
+                                <p className="flex items-center">
+                                    <span className="w-24 text-gray-400 text-xs uppercase tracking-wider font-bold">Total Cuti</span>
+                                    <span className="text-gray-900">{student.totalLeave} Semester</span>
+                                </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 items-center">
                             <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 min-w-[140px] text-center">
                                 <div className="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">GPA (IPK)</div>
                                 <div className="text-4xl font-extrabold text-[#5AA0FF]">{student.gpa.toFixed(2)}</div>
