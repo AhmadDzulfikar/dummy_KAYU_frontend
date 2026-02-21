@@ -158,6 +158,16 @@ export default function LoginPage() {
     }, 1500);
   };
 
+  const handleSSOLogin = () => {
+    // Start a simple redirect flow for SSO - replace endpoint with real SSO entrypoint
+    setMessage(null);
+    setLoading(true);
+    // Small delay to show loading state, then redirect to SSO endpoint
+    setTimeout(() => {
+      window.location.href = '/api/auth/sso';
+    }, 250);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-800 relative z-0">
 
@@ -276,6 +286,29 @@ export default function LoginPage() {
                   ) : (
                     'Login'
                   )}
+                </button>
+              </div>
+
+              {/* SSO Option */}
+              <div className="pt-1">
+                <div className="flex items-center my-4">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <div className="px-3 text-xs text-gray-400 font-medium">atau</div>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSSOLogin}
+                  disabled={loading}
+                  className={`w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl text-sm font-semibold text-gray-700 shadow-sm bg-white border border-gray-200
+                            hover:bg-gray-50 hover:shadow-md active:scale-[0.995] transition-all duration-150
+                            ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#1F2937]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                  </svg>
+                  <span>Login with SSO</span>
                 </button>
               </div>
             </form>
