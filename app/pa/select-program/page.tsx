@@ -35,13 +35,13 @@ export default function SelectProgramPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] py-12">
-            <div className="w-full max-w-3xl text-center space-y-8">
+            <div className="w-full max-w-6xl text-center space-y-8">
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Pilih Program Studi</h1>
                     <p className="text-gray-500 text-lg">Pilih konteks program studi untuk melihat data mahasiswa bimbingan Anda.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                     {ALL_PROGRAMS.map((prog) => (
                         <button
                             key={prog.id}
