@@ -99,12 +99,24 @@ export default function PALayout({ children }: { children: React.ReactNode }) {
                 <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-20 px-8 flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                         {/* Program Indicator if active */}
-                        {activeProgram ? (
-                            <div className="flex items-center bg-blue-50 text-[#5AA0FF] px-3 py-1 rounded-full text-xs font-semibold border border-blue-100">
-                                <span className="mr-1.5 opacity-70">Prodi:</span>
-                                {activeProgram === 'Computer Science' ? 'Ilmu Komputer' : (activeProgram === 'Information Systems' ? 'Sistem Informasi' : activeProgram)}
-                            </div>
-                        ) : (
+                        {activeProgram ? (() => {
+                            const nameMap: Record<string, string> = {
+                                'Computer Science': 'S1 Ilmu Komputer',
+                                'Information Systems': 'S1 Sistem Informasi',
+                                'Artificial Intelligence': 'S1 Kecerdasan Artifisial',
+                                'Computer Science KI': 'S1 Ilmu Komputer KI',
+                                'Information Systems KI': 'S1 Sistem Informasi KI',
+                                'Master Computer Science': 'S2 Ilmu Komputer',
+                                'Master Information Technology': 'S2 Teknologi Informasi',
+                                'Doctor Computer Science': 'S3 Ilmu Komputer',
+                            };
+                            return (
+                                <div className="flex items-center bg-blue-50 text-[#5AA0FF] px-3 py-1 rounded-full text-xs font-semibold border border-blue-100">
+                                    <span className="mr-1.5 opacity-70">Prodi:</span>
+                                    {nameMap[activeProgram] || activeProgram}
+                                </div>
+                            );
+                        })() : (
                             <div className="text-gray-400 text-sm italic">Belum Memilih Prodi</div>
                         )}
                     </div>

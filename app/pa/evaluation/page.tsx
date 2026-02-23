@@ -11,7 +11,7 @@ export default function PAEvaluation() {
     const [userPrograms, setUserPrograms] = useState<string[]>([]);
 
     // Filters & Tabs
-    const [activeTab, setActiveTab] = useState<'AtRisk' | 'Critical'>('AtRisk');
+    const [activeTab, setActiveTab] = useState<'AtRisk'>('AtRisk');
     const [batchFilter, setBatchFilter] = useState<string>('All');
     const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -45,15 +45,6 @@ export default function PAEvaluation() {
 
         // 2. Tab Filter (At Risk vs Critical)
         if (activeTab === 'AtRisk' && !student.isAtRisk) return false;
-
-        if (activeTab === 'Critical') {
-            // Logic: Even Semester AND SKS < (Semester/2)*24
-            const isEvenSemester = student.semester % 2 === 0;
-            const targetSKS = (student.semester / 2) * 24;
-            const isBelowTarget = student.credits < targetSKS;
-
-            if (!isEvenSemester || !isBelowTarget) return false;
-        }
 
         // 3. Batch Filter
         if (batchFilter !== 'All' && student.batch.toString() !== batchFilter) return false;
@@ -122,28 +113,6 @@ export default function PAEvaluation() {
                                 {STUDENTS_DATA.filter(s => s.program === activeProgram && s.isAtRisk).length}
                             </span>
                         </button>
-
-                        <button
-                            onClick={() => setActiveTab('Critical')}
-                            className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center
-                                ${activeTab === 'Critical'
-                                    ? 'border-red-600 text-red-700 font-bold'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }`}
-                        >
-                            <svg className="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            Mahasiswa Kritis (Ancaman DO)
-                            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-bold ${activeTab === 'Critical' ? 'bg-red-200 text-red-800' : 'bg-gray-100 text-gray-900'}`}>
-                                {STUDENTS_DATA.filter(s => {
-                                    if (s.program !== activeProgram) return false;
-                                    const isEven = s.semester % 2 === 0;
-                                    const target = (s.semester / 2) * 24;
-                                    return isEven && s.credits < target;
-                                }).length}
-                            </span>
-                        </button>
                     </nav>
                 </div>
 
@@ -190,11 +159,12 @@ export default function PAEvaluation() {
                                 <th scope="col" className="px-6 py-4 font-semibold">Nama Mahasiswa</th>
                                 <th scope="col" className="px-6 py-4 font-semibold">NPM</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-center">Angkatan</th>
+                                <th scope="col" className="px-6 py-4 font-semibold text-center">Semester</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-right">IPS</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-right">IPK</th>
                                 <th scope="col" className="px-6 py-4 font-semibold text-right">Total SKS</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right text-blue-600">Batas SKS</th>
-                                {['AtRisk', 'Critical'].includes(activeTab) && (
+                                <th scope="col" className="px-6 py-4 font-semibold text-right">Kekurangan SKS</th>
+                                {['AtRisk'].includes(activeTab) && (
                                     <th scope="col" className="px-6 py-4 font-semibold w-1/4">Penyebab Peringatan</th>
                                 )}
                             </tr>
@@ -212,14 +182,22 @@ export default function PAEvaluation() {
                                         </td>
                                         <td className="px-6 py-4">{student.npm}</td>
                                         <td className="px-6 py-4 text-center">{student.batch}</td>
+                                        <td className="px-6 py-4 text-center">{student.semester}</td>
                                         <td className="px-6 py-4 text-right font-mono font-medium text-gray-900">
                                             {student.ips ? student.ips.toFixed(2) : '-'}
                                         </td>
                                         <td className="px-6 py-4 text-right font-mono text-gray-900">{student.gpa.toFixed(2)}</td>
                                         <td className="px-6 py-4 text-right font-mono text-gray-900">{student.credits}</td>
-                                        <td className="px-6 py-4 text-right font-mono font-bold text-[#5AA0FF]">{student.maxSksNext}</td>
+                                        <td className="px-6 py-4 text-right font-mono text-red-600 font-medium">
+                                            {(() => {
+                                                const nextEvenSemester = student.semester % 2 === 0 ? student.semester + 2 : student.semester + 1;
+                                                const targetSKS = (nextEvenSemester / 2) * 24;
+                                                const kekurangan = Math.max(0, targetSKS - student.credits);
+                                                return kekurangan > 0 ? kekurangan : 0;
+                                            })()}
+                                        </td>
 
-                                        {['AtRisk', 'Critical'].includes(activeTab) && (
+                                        {['AtRisk'].includes(activeTab) && (
                                             <td className="px-6 py-4">
                                                 <div className="flex flex-col gap-1.5">
                                                     {student.riskReasons?.slice(0, 2).map((reason, idx) => (
@@ -240,38 +218,18 @@ export default function PAEvaluation() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-16 text-center">
-                                        {activeTab === 'AtRisk' ? (
-                                            <div className="flex flex-col items-center justify-center">
-                                                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-500">
-                                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                </div>
-                                                <h3 className="text-lg font-bold text-gray-900">Semua Mahasiswa Aman</h3>
-                                                <p className="text-gray-500 text-sm mt-1 max-w-sm">
-                                                    Tidak ada mahasiswa bimbingan yang saat ini ditandai Berisiko. Kerja bagus!
-                                                </p>
-                                                <button
-                                                    onClick={() => setActiveTab('Critical')}
-                                                    className="mt-4 text-red-600 text-sm font-semibold hover:underline"
-                                                >
-                                                    Cek Mahasiswa Kritis DO
-                                                </button>
+                                    <td colSpan={9} className="px-6 py-16 text-center">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-500">
+                                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
                                             </div>
-                                        ) : (
-                                            <div className="flex flex-col items-center justify-center py-8">
-                                                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4 text-green-500">
-                                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                </div>
-                                                <h3 className="text-lg font-bold text-gray-900">Aman</h3>
-                                                <p className="text-gray-500 text-sm mt-1 max-w-sm">
-                                                    Tidak ada mahasiswa yang terdeteksi dalam kondisi kritis (ancaman DO).
-                                                </p>
-                                            </div>
-                                        )}
+                                            <h3 className="text-lg font-bold text-gray-900">Semua Mahasiswa Aman</h3>
+                                            <p className="text-gray-500 text-sm mt-1 max-w-sm">
+                                                Tidak ada mahasiswa bimbingan yang saat ini ditandai Berisiko. Kerja bagus!
+                                            </p>
+                                        </div>
                                     </td>
                                 </tr>
                             )}

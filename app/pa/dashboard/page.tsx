@@ -9,7 +9,6 @@ export default function PADashboard() {
     const router = useRouter();
     const [activeProgram, setActiveProgram] = useState<string>('Computer Science');
     const [userPrograms, setUserPrograms] = useState<string[]>([]);
-    const [paSupervisedPrograms, setPaSupervisedPrograms] = useState<string[]>([]);
 
     // Filters
     const [batchFilter, setBatchFilter] = useState<string>('All');
@@ -32,24 +31,16 @@ export default function PADashboard() {
             // Fallback if accessed directly without login (for dev)
             setUserPrograms(['Computer Science', 'Information Systems']);
         }
-        const storedSuper = localStorage.getItem('paSupervisedPrograms');
-        if (storedSuper) {
-            try {
-                const parsed = JSON.parse(storedSuper);
-                setPaSupervisedPrograms(parsed);
-            } catch (e) {
-                setPaSupervisedPrograms(['Computer Science']);
-            }
-        } else {
-            // default assume user supervises programs in userPrograms
-            setPaSupervisedPrograms([]);
-        }
     }, []);
 
     const handleProgramChange = (prog: string) => {
         setActiveProgram(prog);
         localStorage.setItem('activeProgram', prog);
     };
+
+    // Check if there are ANY students for this program (regardless of filters)
+    const allStudentsForProgram = STUDENTS_DATA.filter(student => student.program === activeProgram);
+    const hasSupervisedHere = allStudentsForProgram.length > 0;
 
     // Filter Logic
     const filteredStudents = STUDENTS_DATA.filter(student => {
@@ -70,8 +61,6 @@ export default function PADashboard() {
 
         return true;
     });
-
-    const hasSupervisedHere = paSupervisedPrograms.length === 0 ? true : paSupervisedPrograms.includes(activeProgram);
 
     return (
         <div className="space-y-6">
@@ -104,136 +93,159 @@ export default function PADashboard() {
                 )}
             </div>
 
-            {/* Stats Cards (Optional but good for Dashboard) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Mahasiswa</div>
-                    <div className="text-2xl font-bold text-gray-900 mt-1">{filteredStudents.length}</div>
-                </div>
-
-                <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Status Aktif</div>
-                    <div className="text-2xl font-bold text-emerald-600 mt-1">
-                        {filteredStudents.filter(s => s.status === 'Aktif').length}
-                    </div>
-                </div>
-                <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
-                    <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Cuti</div>
-                    <div className="text-2xl font-bold text-amber-600 mt-1">
-                        {filteredStudents.filter(s => s.status === 'Cuti').length}
-                    </div>
-                </div>
-            </div>
-
-            {/* Filter Bar */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    {/* Batch Filter */}
-                    <select
-                        value={batchFilter}
-                        onChange={(e) => setBatchFilter(e.target.value)}
-                        className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
-                    >
-                        <option value="All">Semua Angkatan</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-
-                    {/* Status Filter */}
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
-                    >
-                        <option value="All">Semua Status</option>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Cuti">Cuti</option>
-                    </select>
-                </div>
-
-                {/* Search */}
-                <div className="relative w-full md:w-72">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg className="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            {/* EMPTY STATE — No supervised students in this program */}
+            {!hasSupervisedHere ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                    <div className="bg-blue-50 rounded-full p-6 mb-6">
+                        <svg className="w-16 h-16 text-[#5AA0FF]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="block w-full p-2.5 pl-10 text-sm text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-[#5AA0FF] focus:border-[#5AA0FF] outline-none"
-                        placeholder="Cari berdasarkan Nama atau NPM..."
-                    />
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">Anda tidak memiliki mahasiswa bimbingan</h2>
+                    <p className="text-gray-500 text-sm max-w-md text-center">
+                        Anda tidak memiliki mahasiswa bimbingan di program studi ini. Silakan pilih program studi lain atau hubungi administrator jika Anda merasa ini adalah kesalahan.
+                    </p>
+                    <button
+                        onClick={() => router.push('/pa/select-program')}
+                        className="mt-6 px-6 py-2.5 rounded-xl font-semibold text-sm text-[#5AA0FF] bg-blue-50 hover:bg-blue-100 transition-colors"
+                    >
+                        ← Kembali ke Pilih Program Studi
+                    </button>
                 </div>
-            </div>
+            ) : (
+                <>
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
+                            <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Mahasiswa</div>
+                            <div className="text-2xl font-bold text-gray-900 mt-1">{filteredStudents.length}</div>
+                        </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-600">
-                        <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
-                            <tr>
-                                <th scope="col" className="px-6 py-4 font-semibold">Nama Mahasiswa</th>
-                                <th scope="col" className="px-6 py-4 font-semibold">NPM</th>
-                                <th scope="col" className="px-6 py-4 font-semibold">Angkatan</th>
-                                <th scope="col" className="px-6 py-4 font-semibold">Status</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">IPK</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-right">SKS</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {hasSupervisedHere && filteredStudents.length > 0 ? (
-                                filteredStudents.map((student) => (
-                                    <tr
-                                        key={student.npm}
-                                        onClick={() => router.push(`/pa/students/${student.npm}`)}
-                                        className="bg-white hover:bg-blue-50 cursor-pointer transition-colors border-l-4 border-transparent hover:border-[#5AA0FF]"
-                                    >
-                                        <td className="px-6 py-4 font-medium text-gray-900 group-hover:text-[#5AA0FF]">
-                                            {student.name}
-                                        </td>
-                                        <td className="px-6 py-4">{student.npm}</td>
-                                        <td className="px-6 py-4">{student.batch}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        ${student.status === 'Aktif'
-                                                    ? 'bg-emerald-100 text-emerald-800'
-                                                    : 'bg-amber-100 text-amber-800'
-                                                }
-                      `}>
-                                                {student.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-mono font-medium text-gray-900">{student.gpa.toFixed(2)}</td>
-                                        <td className="px-6 py-4 text-right font-mono text-gray-900">{student.credits}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500 italic">
-                                        {hasSupervisedHere ? (
-                                            'Data tidak ditemukan.'
-                                        ) : (
-                                            'Anda tidak memiliki mahasiswa bimbingan di program ini.'
-                                        )}
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="px-6 py-4 border-t border-gray-100 text-xs text-gray-400 flex justify-between items-center">
-                    <span>Menampilkan {filteredStudents.length} mahasiswa</span>
-                    {/* Pagination Dummy */}
-                    <div className="flex space-x-1">
-                        <button className="px-2 py-1 rounded border border-gray-200 disabled:opacity-50" disabled>&lt;</button>
-                        <button className="px-2 py-1 rounded bg-[#5AA0FF] text-white font-bold">1</button>
-                        <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50">2</button>
-                        <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50">&gt;</button>
+                        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
+                            <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Status Aktif</div>
+                            <div className="text-2xl font-bold text-emerald-600 mt-1">
+                                {filteredStudents.filter(s => s.status === 'Aktif').length}
+                            </div>
+                        </div>
+                        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-[0_2px_10px_rgb(0,0,0,0.04)]">
+                            <div className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Cuti</div>
+                            <div className="text-2xl font-bold text-amber-600 mt-1">
+                                {filteredStudents.filter(s => s.status === 'Cuti').length}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+
+                    {/* Filter Bar */}
+                    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="flex items-center gap-3 w-full md:w-auto">
+                            {/* Batch Filter */}
+                            <select
+                                value={batchFilter}
+                                onChange={(e) => setBatchFilter(e.target.value)}
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
+                            >
+                                <option value="All">Semua Angkatan</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                            </select>
+
+                            {/* Status Filter */}
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#5AA0FF] focus:border-[#5AA0FF] block p-2.5 outline-none"
+                            >
+                                <option value="All">Semua Status</option>
+                                <option value="Aktif">Aktif</option>
+                                <option value="Cuti">Cuti</option>
+                            </select>
+                        </div>
+
+                        {/* Search */}
+                        <div className="relative w-full md:w-72">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg className="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="block w-full p-2.5 pl-10 text-sm text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-[#5AA0FF] focus:border-[#5AA0FF] outline-none"
+                                placeholder="Cari berdasarkan Nama atau NPM..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left text-gray-600">
+                                <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-4 font-semibold">Nama Mahasiswa</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold">NPM</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold">Angkatan</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold">Status</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold text-right">Semester Aktif</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold text-right">IPK</th>
+                                        <th scope="col" className="px-6 py-4 font-semibold text-right">SKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {filteredStudents.length > 0 ? (
+                                        filteredStudents.map((student) => (
+                                            <tr
+                                                key={student.npm}
+                                                onClick={() => router.push(`/pa/students/${student.npm}`)}
+                                                className="bg-white hover:bg-blue-50 cursor-pointer transition-colors border-l-4 border-transparent hover:border-[#5AA0FF]"
+                                            >
+                                                <td className="px-6 py-4 font-medium text-gray-900 group-hover:text-[#5AA0FF]">
+                                                    {student.name}
+                                                </td>
+                                                <td className="px-6 py-4">{student.npm}</td>
+                                                <td className="px-6 py-4">{student.batch}</td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                ${student.status === 'Aktif'
+                                                            ? 'bg-emerald-100 text-emerald-800'
+                                                            : 'bg-amber-100 text-amber-800'
+                                                        }
+                              `}>
+                                                        {student.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-mono text-gray-900">
+                                                    {Math.max(student.semester - student.totalLeave, 0)}
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-mono font-medium text-gray-900">{student.gpa.toFixed(2)}</td>
+                                                <td className="px-6 py-4 text-right font-mono text-gray-900">{student.credits}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={7} className="px-6 py-12 text-center text-gray-500 italic">
+                                                Data tidak ditemukan.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="px-6 py-4 border-t border-gray-100 text-xs text-gray-400 flex justify-between items-center">
+                            <span>Menampilkan {filteredStudents.length} mahasiswa</span>
+                            {/* Pagination Dummy */}
+                            <div className="flex space-x-1">
+                                <button className="px-2 py-1 rounded border border-gray-200 disabled:opacity-50" disabled>&lt;</button>
+                                <button className="px-2 py-1 rounded bg-[#5AA0FF] text-white font-bold">1</button>
+                                <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50">2</button>
+                                <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50">&gt;</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

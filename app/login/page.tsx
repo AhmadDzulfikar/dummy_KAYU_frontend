@@ -114,34 +114,10 @@ export default function LoginPage() {
 
         // Special Login Logic for Academic Advisor
         if (user.roles.includes('Academic Advisor')) {
-          // Check if it's the only role or if it's the specific target for PA accounts
-          // For simplicity in this dummy, if username starts with PA_ or DosenPA, treat as PA flow
-          const isPAUser = username.startsWith('PA_') || username === 'DosenPA';
-
-          if (isPAUser) {
-            // Special-case dummy account that should still be able to pick program
-            if (username === 'PA_SingleProdi') {
-              const offered = ['Computer Science', 'Information Systems', 'Artificial Intelligence'];
-              // Show selection choices
-              localStorage.setItem('userPrograms', JSON.stringify(offered));
-              // This PA only has supervised students in Computer Science for the dummy
-              localStorage.setItem('paSupervisedPrograms', JSON.stringify(['Computer Science']));
-              router.push('/pa/select-program');
-              return;
-            }
-
-            if (user.programs && user.programs.length > 1) {
-              // By default, mark supervised programs same as listed programs
-              localStorage.setItem('paSupervisedPrograms', JSON.stringify(user.programs));
-              router.push('/pa/select-program');
-              return;
-            } else if (user.programs && user.programs.length === 1) {
-              localStorage.setItem('paSupervisedPrograms', JSON.stringify(user.programs));
-              localStorage.setItem('activeProgram', user.programs[0]);
-              router.push('/pa/dashboard');
-              return;
-            }
-          }
+          // All PA users go to select-program — the page shows all 8 prodi
+          // regardless of which prodi the PA actually supervises
+          router.push('/pa/select-program');
+          return;
         }
 
         // Check default role (if implemented, for now we follow the simple rule: 1 role = auto, >1 = select)

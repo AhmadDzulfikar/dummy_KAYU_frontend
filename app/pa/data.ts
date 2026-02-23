@@ -40,13 +40,13 @@ export const STUDENTS_DATA: Student[] = [
     {
         npm: '2306089999', name: 'Rizky Pratama', program: 'Computer Science', batch: 2023, status: 'Aktif',
         gpa: 2.15, ips: 1.80, credits: 40, semester: 3, totalLeave: 0, phone: '081234560001', isAtRisk: true,
-        riskReasons: ['IPS < 2.30', 'SKS lulus semester ganjil di bawah 11']
+        riskReasons: ['IPS < 2.00', 'SKS lulus semester ganjil di bawah 11']
     },
     // WARNING: Drastic Drop
     {
         npm: '2306088888', name: 'Dewi Lestari', program: 'Computer Science', batch: 2023, status: 'Aktif',
         gpa: 3.20, ips: 2.10, credits: 30, semester: 4, totalLeave: 0, phone: '081234560002', isAtRisk: true,
-        riskReasons: ['SKS Kurang dari Target (Ancaman DO)', 'IPS < 2.30']
+        riskReasons: ['SKS Kurang dari Target (Ancaman DO)', 'IPS < 2.00']
     },
     {
         npm: '2306083456', name: 'Wayan Adi', program: 'Computer Science', batch: 2023, status: 'Cuti',
@@ -96,7 +96,7 @@ export const STUDENTS_DATA: Student[] = [
     {
         npm: '2306096666', name: 'Bambang Pamungkas', program: 'Information Systems', batch: 2023, status: 'Aktif',
         gpa: 2.80, ips: 1.90, credits: 40, semester: 3, totalLeave: 0, phone: '081234560004', isAtRisk: true,
-        riskReasons: ['IPS < 2.30']
+        riskReasons: ['IPS < 2.00']
     },
     {
         npm: '2306094567', name: 'Doni Pratama', program: 'Information Systems', batch: 2023, status: 'Aktif',

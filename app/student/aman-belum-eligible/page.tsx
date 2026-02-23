@@ -31,12 +31,12 @@ export default function StudentDashboard() {
     ];
 
     const requiredCoursesNotTaken = [
-        { code: 'CSGE602022', name: 'Software Engineering', sks: 4 },
-        { code: 'CSGE602055', name: 'Operating Systems', sks: 4 },
-        { code: 'CSGE603331', name: 'Information Retrieval', sks: 3 },
-        { code: 'CSGE604123', name: 'Machine Learning', sks: 3 },
-        { code: 'CSGE602011', name: 'Computer Networks', sks: 4 },
-        { code: 'CSGE602005', name: 'Database Systems', sks: 4 },
+        { code: 'CSGE602022', name: 'Software Engineering', sks: 4, semester: 'Sem. 4' },
+        { code: 'CSGE602055', name: 'Operating Systems', sks: 4, semester: 'Sem. 4' },
+        { code: 'CSGE603331', name: 'Information Retrieval', sks: 3, semester: 'Sem. 5' },
+        { code: 'CSGE604123', name: 'Machine Learning', sks: 3, semester: 'Sem. 6' },
+        { code: 'CSGE602011', name: 'Computer Networks', sks: 4, semester: 'Sem. 5' },
+        { code: 'CSGE602005', name: 'Database Systems', sks: 4, semester: 'Sem. 4' },
     ];
 
     const requiredCoursesTaken = [
@@ -123,23 +123,6 @@ export default function StudentDashboard() {
                                 </div>
                             </div>
 
-                            {/* Rule / Explanation */}
-                            <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
-                                <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-600 uppercase tracking-wide">
-                                    Penentuan Batas SKS
-                                </div>
-                                <table className="w-full text-xs text-left">
-                                    <tbody className="divide-y divide-gray-50">
-                                        {maxCreditsRules.map((rule, i) => (
-                                            <tr key={i} className={rule.active ? 'bg-blue-50/60' : ''}>
-                                                <td className={`px-4 py-2 ${rule.active ? 'font-bold text-blue-700' : 'text-gray-500'}`}>{rule.gpa}</td>
-                                                <td className={`px-4 py-2 text-right ${rule.active ? 'font-bold text-blue-700' : 'text-gray-500'}`}>{rule.credit} SKS</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
                             <p className="mt-4 text-xs text-gray-500 leading-relaxed bg-yellow-50 p-3 rounded-lg border border-yellow-100 flex gap-2">
                                 <AlertCircle className="w-4 h-4 text-yellow-600 shrink-0" />
                                 <span>
@@ -209,6 +192,8 @@ export default function StudentDashboard() {
                                                         <h4 className="font-bold text-gray-800 text-base group-hover:text-[#5AA0FF] transition-colors">{course.name}</h4>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{course.code}</span>
+                                                            <span className="text-xs text-gray-400">•</span>
+                                                            <span className="text-xs text-gray-500">{course.semester}</span>
                                                             <span className="text-xs text-red-500 font-medium px-2 py-0.5 bg-red-50 rounded-full">Belum Diambil</span>
                                                         </div>
                                                     </div>
