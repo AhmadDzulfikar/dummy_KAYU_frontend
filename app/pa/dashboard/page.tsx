@@ -9,6 +9,7 @@ export default function PADashboard() {
     const router = useRouter();
     const [activeProgram, setActiveProgram] = useState<string>('Computer Science');
     const [userPrograms, setUserPrograms] = useState<string[]>([]);
+    const [paSupervisedPrograms, setPaSupervisedPrograms] = useState<string[]>([]);
 
     // Filters
     const [batchFilter, setBatchFilter] = useState<string>('All');
@@ -30,6 +31,18 @@ export default function PADashboard() {
         } else {
             // Fallback if accessed directly without login (for dev)
             setUserPrograms(['Computer Science', 'Information Systems']);
+        }
+        const storedSuper = localStorage.getItem('paSupervisedPrograms');
+        if (storedSuper) {
+            try {
+                const parsed = JSON.parse(storedSuper);
+                setPaSupervisedPrograms(parsed);
+            } catch (e) {
+                setPaSupervisedPrograms(['Computer Science']);
+            }
+        } else {
+            // default assume user supervises programs in userPrograms
+            setPaSupervisedPrograms([]);
         }
     }, []);
 
@@ -57,6 +70,8 @@ export default function PADashboard() {
 
         return true;
     });
+
+    const hasSupervisedHere = paSupervisedPrograms.length === 0 ? true : paSupervisedPrograms.includes(activeProgram);
 
     return (
         <div className="space-y-6">
@@ -168,7 +183,7 @@ export default function PADashboard() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            {filteredStudents.length > 0 ? (
+                            {hasSupervisedHere && filteredStudents.length > 0 ? (
                                 filteredStudents.map((student) => (
                                     <tr
                                         key={student.npm}
@@ -197,7 +212,11 @@ export default function PADashboard() {
                             ) : (
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500 italic">
-                                        Data tidak ditemukan.
+                                        {hasSupervisedHere ? (
+                                            'Data tidak ditemukan.'
+                                        ) : (
+                                            'Anda tidak memiliki mahasiswa bimbingan di program ini.'
+                                        )}
                                     </td>
                                 </tr>
                             )}

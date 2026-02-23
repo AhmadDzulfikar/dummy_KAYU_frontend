@@ -18,14 +18,14 @@ export default function SelectProgramPage() {
                     setPrograms(parsed);
                 } else {
                     // Fallback for direct access without login
-                    setPrograms(['Computer Science', 'Information Systems']);
+                    setPrograms(['Computer Science', 'Information Systems', 'Artificial Intelligence']);
                 }
             } catch (e) {
-                setPrograms(['Computer Science', 'Information Systems']);
+                setPrograms(['Computer Science', 'Information Systems', 'Artificial Intelligence']);
             }
         } else {
             // Fallback
-            setPrograms(['Computer Science', 'Information Systems']);
+            setPrograms(['Computer Science', 'Information Systems', 'Artificial Intelligence']);
         }
     }, []);
 
@@ -73,7 +73,7 @@ export default function SelectProgramPage() {
                             </div>
 
                             <h3 className={`text-lg font-bold ${selected === prog ? 'text-[#5AA0FF]' : 'text-gray-900'}`}>
-                                {prog === 'Computer Science' ? 'Ilmu Komputer' : (prog === 'Information Systems' ? 'Sistem Informasi' : prog)}
+                                    {prog === 'Computer Science' ? 'Ilmu Komputer' : (prog === 'Information Systems' ? 'Sistem Informasi' : (prog === 'Artificial Intelligence' ? 'Kecerdasan Artifisial' : prog))}
                             </h3>
                             <p className="text-sm text-gray-500 mt-1">
                                 Lihat data mahasiswa dan akademik untuk {prog}.
