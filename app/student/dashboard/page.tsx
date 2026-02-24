@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
     CheckCircle,
-    XCircle,
-    AlertCircle,
     Search,
     Check
 } from '../components/Icons';
@@ -19,14 +17,6 @@ export default function StudentDashboard() {
         { label: 'IPK', value: '3.28', sub: 'Skala 4.0' },
         { label: 'SKS Transfer', value: '6', sub: 'Dihitung terpisah' },
         { label: 'SKS Total', value: '150', sub: 'Gabungan Reguler & Transfer', highlight: true },
-    ];
-
-    const maxCreditsRules = [
-        { gpa: '> 3.5', credit: 24, label: 'Sangat Baik' },
-        { gpa: '> 3.0 - 3.5', credit: 21, active: true, label: 'Sangat Baik' }, // 3.10 falls here
-        { gpa: '> 2.5 - 3.0', credit: 18, label: 'Baik' },
-        { gpa: '> 2.0 - 2.5', credit: 15, label: 'Cukup' },
-        { gpa: '≤ 2.0', credit: 12, label: 'Kurang' },
     ];
 
     const requiredCoursesNotTaken: { code: string; name: string; sks: number }[] = [];
@@ -115,29 +105,6 @@ export default function StudentDashboard() {
                                 </div>
                             </div>
 
-                            {/* Rule / Explanation */}
-                            <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
-                                <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-600 uppercase tracking-wide">
-                                    Penentuan Batas SKS
-                                </div>
-                                <table className="w-full text-xs text-left">
-                                    <tbody className="divide-y divide-gray-50">
-                                        {maxCreditsRules.map((rule, i) => (
-                                            <tr key={i} className={rule.active ? 'bg-blue-50/60' : ''}>
-                                                <td className={`px-4 py-2 ${rule.active ? 'font-bold text-blue-700' : 'text-gray-500'}`}>{rule.gpa}</td>
-                                                <td className={`px-4 py-2 text-right ${rule.active ? 'font-bold text-blue-700' : 'text-gray-500'}`}>{rule.credit} SKS</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <p className="mt-4 text-xs text-gray-500 leading-relaxed bg-yellow-50 p-3 rounded-lg border border-yellow-100 flex gap-2">
-                                <AlertCircle className="w-4 h-4 text-yellow-600 shrink-0" />
-                                <span>
-                                    <span className="font-semibold text-yellow-800">Catatan:</span> Semester genap memiliki pemeriksaan pencapaian 24 SKS (24, 48, 72...).
-                                </span>
-                            </p>
                         </div>
                     </section>
                 </div>
